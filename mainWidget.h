@@ -3,15 +3,14 @@
 #include <QtWidgets/QWidget>
 #include "ui_mainWidget.h"
 
-class mainWidget : public QWidget
-{
+class mainWidget : public QWidget {
     Q_OBJECT
 
-public:
+  public:
     mainWidget(QWidget *parent = Q_NULLPTR);
 
-private slots:
-  
-private:
+  private slots:
+ 
+  private:
     Ui::mainWidgetClass ui;
 };

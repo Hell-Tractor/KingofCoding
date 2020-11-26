@@ -96,6 +96,11 @@
     </QtMoc>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="key.cpp" />
+    <ClCompile Include="keyboard.cpp" />
+    <ClCompile Include="ui_mainWidget.cpp" />
+    <ClInclude Include="key.h" />
+    <ClInclude Include="keyboard.h" />
     <ClInclude Include="ui_mainWidget.h" />
     <QtMoc Include="mainWidget.h" />
     <ClCompile Include="mainWidget.cpp" />

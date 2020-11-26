@@ -5,5 +5,4 @@ mainWidget::mainWidget(QWidget *parent)
     : QWidget(parent) {
     ui.setupUi(this);
 
-    
 }
