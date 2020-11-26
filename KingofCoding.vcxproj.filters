@@ -47,7 +47,10 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="changlog.md">
+    <None Include="README.md">
+      <Filter>Description Files</Filter>
+    </None>
+    <None Include="changelog.md">
       <Filter>Description Files</Filter>
     </None>
   </ItemGroup>

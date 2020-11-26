@@ -107,7 +107,8 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="changlog.md" />
+    <None Include="changelog.md" />
+    <None Include="README.md" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">
