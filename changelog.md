@@ -1,4 +1,10 @@
-### 2020.11.16 16:39(UTC+8) Chen Yiming
+### 2020.11.17 13:40(UTC+8) Chen Yiming
+
+- 完善了keyboard设计
+- 为堆叠窗口添加了枚举变量
+- 添加了闯关模式文件夹，初步设计闯关模式
+
+### 2020.11.16 17:40(UTC+8) Chen Yiming
 
 - 将ui_mainWidget.h中声明与实现分离
 - 更改了changelog与README编码为utf-8

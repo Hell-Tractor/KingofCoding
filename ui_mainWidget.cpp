@@ -57,8 +57,21 @@ void Ui_mainWidgetClass::setupUi(QWidget* mainWidgetClass) {
 
   //game
   QWidget* game = new QWidget;
+  QVBoxLayout* game_layout = new QVBoxLayout;
+  //stage
+  QHBoxLayout* stage_layouts[3];
+  for (int i = 0; i < 3; ++i) {
+    stage_layouts[i] = new QHBoxLayout;
+    textZone[i] = new QLabel;
+    stage_layouts[i]->addWidget(textZone[i]);
+    stage_layouts[i]->addStretch();
+    game_layout->addLayout(stage_layouts[i]);
+  }
+  //scoreboard
+  //keyboard
   keyboard_ = new keyboard;
-  game->setLayout(keyboard_->keyboard_layout);
+  game_layout->addLayout(keyboard_->keyboard_layout);
+  game->setLayout(game_layout);
   stackedWidget->addWidget(game);
   /**********************************/
   retranslateUi(mainWidgetClass);
@@ -78,6 +91,11 @@ void Ui_mainWidgetClass::retranslateUi(QWidget* mainWidgetClass) {
   this->stagebtn->setText("Stage mode");
   this->endlessbtn->setText("Endless mode");
   this->backToMenu->setText("Back");
+  
+  //game
+  //for (int i = 0; i < 3; ++i) {
+  //  this->textZone[i]->setText("<font size=15 color=red face=Inconsolata>TEST</font>");
+  //}
 
-  this->stackedWidget->setCurrentIndex(2);
+  this->stackedWidget->setCurrentIndex(0);
 }

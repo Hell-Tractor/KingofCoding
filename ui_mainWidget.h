@@ -26,6 +26,7 @@ class Ui_mainWidgetClass
     
     //game
     keyboard* keyboard_;
+    QLabel* textZone[3];
 
     void setupUi(QWidget* mainWidgetClass);
     void retranslateUi(QWidget* mainWidgetClass);
