@@ -8,6 +8,7 @@
 #include <qlabel.h>
 #include <qstackedwidget.h>
 #include <qlayout.h>
+#include <qlistwidget.h>
 #include "keyboard.h"
 
 QT_BEGIN_NAMESPACE
@@ -24,9 +25,14 @@ class Ui_mainWidgetClass
     QPushButton* stagebtn, * endlessbtn, * backToMenu;
     QLabel* selectm_title;
     
+    //stage select
+    QLabel* stage_select_title;
+    QListWidget* stage_list_widget;
+    QPushButton* backToMode;
+
     //game
     keyboard* keyboard_;
-    QLabel* textZone[3];
+    QLabel* textZone[3], *health_label;
 
     void setupUi(QWidget* mainWidgetClass);
     void retranslateUi(QWidget* mainWidgetClass);
