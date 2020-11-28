@@ -109,9 +109,9 @@ void Ui_mainWidgetClass::setupUi(QWidget* mainWidgetClass) {
 }
 
 void Ui_mainWidgetClass::retranslateUi(QWidget* mainWidgetClass) {
-  mainWidgetClass->setWindowTitle(QCoreApplication::translate("mainWidgetClass", "King of Coding-alpha1.0.0", nullptr));
+  mainWidgetClass->setWindowTitle(QCoreApplication::translate("mainWidgetClass", "King of Coding-alpha1.0.1", nullptr));
   //menu
-  this->title->setText("King of Coding\nalpha1.0.0");
+  this->title->setText("King of Coding\nalpha1.0.1");
   this->title->setAlignment(Qt::AlignCenter);
   this->standingbtn->setText("Top Standings");
   this->startbtn->setText("Start Game");

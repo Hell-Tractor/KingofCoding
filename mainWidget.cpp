@@ -2,17 +2,17 @@
 #include "stdafx.h"
 #include <qmessagebox.h>
 
-const int mainWidget::length_per_label = 10;
+const int mainWidget::length_per_label = 20;
 
 mainWidget::mainWidget(QWidget *parent)
-    : QWidget(parent), time_interval(10) {
+    : QWidget(parent), time_interval(20) {
   ui.setupUi(this);
    
   /********************init********************/
   gamestate = gameState::UN_STARTED;
   health = gametime = 0;
   timer = new QTimer();
-  timer->setTimerType(Qt::TimerType::CoarseTimer);
+  timer->setTimerType(Qt::TimerType::PreciseTimer);
   /********************init********************/
 
   /******************Thread*********************/
@@ -39,7 +39,7 @@ mainWidget::mainWidget(QWidget *parent)
   connect(this->timer, &QTimer::timeout, this, &mainWidget::Loop);
   /******************connect********************/
 
-  timer->start(20);
+  timer->start(time_interval);
 }
 
 mainWidget::~mainWidget() {
@@ -57,8 +57,8 @@ void mainWidget::keyPressEvent(QKeyEvent* e) {
     //restore key color
     ui.keyboard_->keys[e->key()]->change_color("yellow");
     //set text color
-    ui.textZone[1]->setText(QString("<font face=Inconsolata size=15 color=red>") + currentText[1].left(i + 1) +
-                            "</font><font face=Inconsolata size=15>" + currentText[1].right(currentText[1].length() - i - 1) + "</font>");
+    ui.textZone[1]->setText(QString("<font face=Consolas size=15 color=red>") + currentText[1].left(i + 1) +
+                            "</font><font face=Consolas size=15>" + currentText[1].right(currentText[1].length() - i - 1) + "</font>");
     i++;
     //check legality of i
     if (i == currentText[1].length()) {
@@ -101,7 +101,7 @@ bool mainWidget::updateText() {
     ui.textZone[i]->setText(ui.textZone[i + 1]->text());
     currentText[i] = currentText[i + 1];
   }
-  ui.textZone[2]->setText(QString("<font face=Inconsolata size=15>") + text + "</font>");
+  ui.textZone[2]->setText(QString("<font face=Consolas size=15>") + text + "</font>");
   currentText[2] = text;
   return !currentText[1].isEmpty();
 }
