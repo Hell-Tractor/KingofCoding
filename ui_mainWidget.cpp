@@ -82,8 +82,8 @@ void Ui_mainWidgetClass::setupUi(QWidget* mainWidgetClass) {
   for (int i = 0; i < 3; ++i) {
     stage_layouts[i] = new QHBoxLayout;
     textZone[i] = new QLabel;
-    textZone[i]->setFixedWidth(500);
-    textZone[i]->setFixedHeight(40);
+    //textZone[i]->setFixedWidth(500);
+    //textZone[i]->setFixedHeight(40);
     stage_layouts[i]->addWidget(textZone[i]);
     stage_layouts[i]->addStretch();
     game_layout->addLayout(stage_layouts[i]);
@@ -109,9 +109,9 @@ void Ui_mainWidgetClass::setupUi(QWidget* mainWidgetClass) {
 }
 
 void Ui_mainWidgetClass::retranslateUi(QWidget* mainWidgetClass) {
-  mainWidgetClass->setWindowTitle(QCoreApplication::translate("mainWidgetClass", "King of Coding-alpha1.0.1", nullptr));
+  mainWidgetClass->setWindowTitle(QCoreApplication::translate("mainWidgetClass", "King of Coding-alpha1.0.2", nullptr));
   //menu
-  this->title->setText("King of Coding\nalpha1.0.1");
+  this->title->setText("King of Coding\nalpha1.0.2");
   this->title->setAlignment(Qt::AlignCenter);
   this->standingbtn->setText("Top Standings");
   this->startbtn->setText("Start Game");
