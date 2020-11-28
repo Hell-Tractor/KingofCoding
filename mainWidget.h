@@ -4,6 +4,7 @@
 #include "ui_mainWidget.h"
 #include <qqueue.h>
 #include <qfile.h>
+#include <qtimer.h>
 
 class mainWidget : public QWidget {
     Q_OBJECT
@@ -19,21 +20,31 @@ class mainWidget : public QWidget {
       STAGE, ENDLESS
     };
 
+    enum gameState {
+      UN_STARTED, WAITING, RUNNING, WIN, LOSE
+    };
+
   signals:
     void GameStart(int mode);
+    void GameEnds(int mode, int state);
 
   private slots:
     void setCurrentStage(QListWidgetItem* item);
     void initGame(int mode);
+    void cleanUpGame(int mode, int state);
+    void Loop();
 
   private:
     bool updateText();
     void keyPressEvent(QKeyEvent* e);
 
-    Ui::mainWidgetClass ui;
     const static int length_per_label;
+    const int time_interval;
+
+    Ui::mainWidgetClass ui;
     QString currentStage, currentText[3];
     QFile* gameText;
-    bool isGaming;
-    int health;
+    int gamestate;
+    int health, gametime;
+    QTimer* timer;
 };
