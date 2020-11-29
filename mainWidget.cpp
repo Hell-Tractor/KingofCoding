@@ -10,6 +10,7 @@ mainWidget::mainWidget(QWidget *parent)
    
   /********************init********************/
   gamestate = gameState::UN_STARTED;
+  gameText = nullptr;
   health = gametime = 0;
   timer = new QTimer();
   timer->setTimerType(Qt::TimerType::PreciseTimer);
@@ -75,6 +76,11 @@ void mainWidget::keyPressEvent(QKeyEvent* e) {
     //wrong key pressed
     health--;
     ui.health_label->setText(QString("Health: ") + QString::number(health));
+    ui.health_label->setStyleSheet("background-color: red");
+
+    QTimer::singleShot(100, Qt::TimerType::CoarseTimer, [=]() {
+      ui.health_label->setStyleSheet("");
+                       });
     //died
     if (health == 0) {
       emit GameEnds(gameMode::STAGE, gameState::LOSE);
@@ -168,6 +174,7 @@ void mainWidget::cleanUpGame(int mode, int state) {
   //close gamefile
   gameText->close();
   delete gameText;
+  gameText = nullptr;
 
   //update gamestate
   gamestate = gameState::UN_STARTED;
