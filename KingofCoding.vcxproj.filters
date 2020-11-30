@@ -68,5 +68,8 @@
     <None Include="changelog.md">
       <Filter>Description Files</Filter>
     </None>
+    <None Include="keys">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

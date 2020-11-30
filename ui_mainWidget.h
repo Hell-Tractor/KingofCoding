@@ -32,7 +32,7 @@ class Ui_mainWidgetClass
 
     //game
     keyboard* keyboard_;
-    QLabel* textZone[3], * health_label, * time_label;
+    QLabel* textZone[3], * health_label, * time_label, * score_label;
 
     void setupUi(QWidget* mainWidgetClass);
     void retranslateUi(QWidget* mainWidgetClass);

@@ -37,6 +37,12 @@ class mainWidget : public QWidget {
   private:
     bool updateText();
     void keyPressEvent(QKeyEvent* e);
+    void handleKeyPress_Stage(int key);
+    void handleKeyPress_Endless(int key);
+    void initStage();
+    void initEndless();
+    void wrongKeyWarning();
+    QString getText();
 
     const static int length_per_label;
     const int time_interval;
@@ -45,6 +51,9 @@ class mainWidget : public QWidget {
     QString currentStage, currentText[3];
     QFile* gameText;
     int gamestate;
-    int health, gametime;
+    int health, gametime, gamemode, score;
     QTimer* timer;
+    QByteArrayList keylist;
+
+    int i; //record current position
 };

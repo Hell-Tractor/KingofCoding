@@ -91,8 +91,11 @@ void Ui_mainWidgetClass::setupUi(QWidget* mainWidgetClass) {
   //scoreboard
   QHBoxLayout* scoreboard_layout = new QHBoxLayout;
   health_label = new QLabel;
+  score_label = new QLabel;
   time_label = new QLabel;
   scoreboard_layout->addWidget(health_label);
+  scoreboard_layout->addStretch();
+  scoreboard_layout->addWidget(score_label);
   scoreboard_layout->addStretch();
   scoreboard_layout->addWidget(time_label);
   game_layout->addLayout(scoreboard_layout);
@@ -109,9 +112,9 @@ void Ui_mainWidgetClass::setupUi(QWidget* mainWidgetClass) {
 }
 
 void Ui_mainWidgetClass::retranslateUi(QWidget* mainWidgetClass) {
-  mainWidgetClass->setWindowTitle(QCoreApplication::translate("mainWidgetClass", "King of Coding-alpha1.0.2", nullptr));
+  mainWidgetClass->setWindowTitle(QCoreApplication::translate("mainWidgetClass", "King of Coding-alpha2.0.0", nullptr));
   //menu
-  this->title->setText("King of Coding\nalpha1.0.2");
+  this->title->setText("King of Coding\nalpha2.0.0");
   this->title->setAlignment(Qt::AlignCenter);
   this->standingbtn->setText("Top Standings");
   this->startbtn->setText("Start Game");
@@ -134,6 +137,7 @@ void Ui_mainWidgetClass::retranslateUi(QWidget* mainWidgetClass) {
   //game
   this->health_label->setText("Health: ");
   this->time_label->setText("Time Used: 0.00");
+  this->score_label->setText("Score: 0");
 
   this->stackedWidget->setCurrentIndex(0);
 }
