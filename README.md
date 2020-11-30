@@ -9,9 +9,9 @@
 ## Tutorials
 
 - 点击StartGame按钮
-- 点击StageMode按钮
-- 双击选择关卡（可自行添加关卡）
-- 按下提示的对应按键，错误三次游戏失败
+- 选择你想游玩的关卡
+- 按下提示的对应按键
+- 争取获得高分吧！
 
 ## How to add custom stages
 
