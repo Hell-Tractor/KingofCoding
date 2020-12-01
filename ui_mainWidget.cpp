@@ -6,7 +6,13 @@
 void Ui_mainWidgetClass::setupUi(QWidget* mainWidgetClass) {
   if (mainWidgetClass->objectName().isEmpty())
     mainWidgetClass->setObjectName(QString::fromUtf8("mainWidgetClass"));
-  mainWidgetClass->resize(600, 400);
+  /**************settings***************/
+  QSettings* settings = new QSettings("./settings.ini", QSettings::IniFormat);
+  int width = settings->value("/mainWidget/width").toInt();
+  int height = settings->value("/mainWidget/height").toInt();
+  delete settings;
+  /**************settings***************/
+  mainWidgetClass->resize(width, height);
   /**********************************/
   QHBoxLayout* stackedWidgetLayout = new QHBoxLayout;
   stackedWidget = new QStackedWidget;
@@ -20,9 +26,12 @@ void Ui_mainWidgetClass::setupUi(QWidget* mainWidgetClass) {
   menu_title->addStretch();
   menu_title->addWidget(title);
   menu_title->addStretch();
+  aboutbtn = new QPushButton;
   standingbtn = new QPushButton;
   startbtn = new QPushButton;
   QHBoxLayout* menu_btn = new QHBoxLayout;
+  menu_btn->addStretch();
+  menu_btn->addWidget(aboutbtn);
   menu_btn->addStretch();
   menu_btn->addWidget(standingbtn);
   menu_btn->addStretch();
@@ -105,6 +114,19 @@ void Ui_mainWidgetClass::setupUi(QWidget* mainWidgetClass) {
   //apply
   game->setLayout(game_layout);
   stackedWidget->addWidget(game);
+
+  //about
+  QWidget* about = new QWidget;
+  QVBoxLayout* about_layout = new QVBoxLayout;
+  aboutInfo = new QLabel;
+  about_layout->addWidget(aboutInfo);
+  QHBoxLayout* about_btn_layout = new QHBoxLayout;
+  aboutToMenu = new QPushButton;
+  about_btn_layout->addStretch();
+  about_btn_layout->addWidget(aboutToMenu);
+  about_layout->addLayout(about_btn_layout);
+  about->setLayout(about_layout);
+  stackedWidget->addWidget(about);
   /**********************************/
   retranslateUi(mainWidgetClass);
 
@@ -112,12 +134,13 @@ void Ui_mainWidgetClass::setupUi(QWidget* mainWidgetClass) {
 }
 
 void Ui_mainWidgetClass::retranslateUi(QWidget* mainWidgetClass) {
-  mainWidgetClass->setWindowTitle(QCoreApplication::translate("mainWidgetClass", "King of Coding-alpha2.0.0", nullptr));
+  mainWidgetClass->setWindowTitle(QCoreApplication::translate("mainWidgetClass", "King of Coding-v2.1.0-alpha", nullptr));
   //menu
-  this->title->setText("King of Coding\nalpha2.0.0");
+  this->title->setText("King of Coding\nv2.1.0-alpha");
   this->title->setAlignment(Qt::AlignCenter);
   this->standingbtn->setText("Top Standings");
   this->startbtn->setText("Start Game");
+  this->aboutbtn->setText("About");
   
   //mode select
   this->selectm_title->setText("select mode");
@@ -138,6 +161,18 @@ void Ui_mainWidgetClass::retranslateUi(QWidget* mainWidgetClass) {
   this->health_label->setText("Health: ");
   this->time_label->setText("Time Used: 0.00");
   this->score_label->setText("Score: 0");
+
+  //about
+  this->aboutToMenu->setText("Back");
+  this->aboutbtn->setText("About");
+  this->aboutInfo->setText("<font size=\"3px\" face=Consolas>\
+                           < h1 style = \"text-align: center;\" > King of Coding< / h1>\
+                           < / font>\
+                           <font size = \"2px\" face=Consolas>\
+                           <p style = \"text-align: left\">Version: 2.1.0 - alpha< / p>\
+                           <p style = \"text-align: left\">Author : Chen Yiming< / p>\
+                           <p style = \"text-align: left\">Other : This program is only for personal use.<br><font style = \"color: red;\">Any acts of plagiarism is prohibitted.< / font>< / p>\
+                           < / font>");
 
   this->stackedWidget->setCurrentIndex(0);
 }

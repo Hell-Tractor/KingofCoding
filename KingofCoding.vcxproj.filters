@@ -71,5 +71,8 @@
     <None Include="keys">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="settings.ini">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

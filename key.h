@@ -6,4 +6,6 @@ class key : public QLabel {
 	public:
 		key(char ch, QWidget* parent = 0);
 		void change_color(QString col);
+	private:
+		int text_size;
 };

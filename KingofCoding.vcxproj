@@ -115,6 +115,7 @@
     <None Include="changelog.md" />
     <None Include="keys" />
     <None Include="README.md" />
+    <None Include="settings.ini" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

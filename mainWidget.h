@@ -13,7 +13,7 @@ class mainWidget : public QWidget {
     mainWidget(QWidget *parent = Q_NULLPTR);
     ~mainWidget();
     enum widget {
-      MENU, MODE_SELECT, STAGE_SELECT, GAME
+      MENU, MODE_SELECT, STAGE_SELECT, GAME, ABOUT
     };
 
     enum gameMode {
@@ -44,8 +44,8 @@ class mainWidget : public QWidget {
     void wrongKeyWarning();
     QString getText();
 
-    const static int length_per_label;
-    const int time_interval;
+    int length_per_label;
+    int time_interval;
 
     Ui::mainWidgetClass ui;
     QString currentStage, currentText[3];
@@ -55,5 +55,5 @@ class mainWidget : public QWidget {
     QTimer* timer;
     QByteArrayList keylist;
 
-    int i; //record current position
+    int i; //record current po  sition
 };

@@ -9,6 +9,7 @@
 #include <qstackedwidget.h>
 #include <qlayout.h>
 #include <qlistwidget.h>
+#include <qsettings.h>
 #include "keyboard.h"
 
 QT_BEGIN_NAMESPACE
@@ -18,7 +19,7 @@ class Ui_mainWidgetClass
   public:
     QStackedWidget* stackedWidget;
     //menu
-    QPushButton* startbtn, * standingbtn;
+    QPushButton* startbtn, * standingbtn, * aboutbtn;
     QLabel* title;
 
     //mode select
@@ -33,6 +34,10 @@ class Ui_mainWidgetClass
     //game
     keyboard* keyboard_;
     QLabel* textZone[3], * health_label, * time_label, * score_label;
+
+    //about
+    QPushButton* aboutToMenu;
+    QLabel* aboutInfo;
 
     void setupUi(QWidget* mainWidgetClass);
     void retranslateUi(QWidget* mainWidgetClass);

@@ -1,3 +1,9 @@
+### alpha 2.1.0
+
+- 添加了About界面
+- 部分窗口设置从.ini读入
+- 修正了Endless模式下按错按键时间未恢复的bug
+
 ### alpha 2.0.0
 
 - 添加了Endless模式

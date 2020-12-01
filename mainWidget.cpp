@@ -3,13 +3,17 @@
 #include <qmessagebox.h>
 #include <qglobal.h>
 
-const int mainWidget::length_per_label = 20;
-
 mainWidget::mainWidget(QWidget *parent)
-    : QWidget(parent), time_interval(20) {
+    : QWidget(parent) {
   ui.setupUi(this);
+  setWindowFlags(windowFlags() & ~Qt::WindowMaximizeButtonHint);
+  setFixedSize(this->width(), this->height());
    
   /********************init********************/
+  QSettings* settings = new QSettings("./settings.ini", QSettings::IniFormat);
+  length_per_label = settings->value("/game/length_per_label").toInt();
+  time_interval = settings->value("/game/refresh_interval").toInt();
+  delete settings;
   gamestate = gameState::UN_STARTED;
   gamemode = -1;
   gameText = nullptr;
@@ -37,6 +41,13 @@ mainWidget::mainWidget(QWidget *parent)
   connect(ui.endlessbtn, &QPushButton::clicked, this, [=]() {
     ui.stackedWidget->setCurrentIndex(widget::GAME);
     emit GameStart(gameMode::ENDLESS);
+          });
+  connect(ui.aboutbtn, &QPushButton::clicked, this, [=]() {
+    ui.stackedWidget->setCurrentIndex(widget::ABOUT);
+    qDebug() << ui.stackedWidget->width() << ' ' << ui.stackedWidget->height();
+          });
+  connect(ui.aboutToMenu, &QPushButton::clicked, this, [=]() {
+    ui.stackedWidget->setCurrentIndex(widget::MENU);
           });
 
   connect(ui.stage_list_widget, &QListWidget::itemDoubleClicked, this, &mainWidget::setCurrentStage);
@@ -103,6 +114,9 @@ void mainWidget::handleKeyPress_Endless(int key) {
     currentText[1] = getText();
     ui.textZone[1]->setText(QString("<font face=Consolas size=15>") + currentText[1] + "</font>");
     ui.keyboard_->keys[currentText[1][i].toUpper().unicode()]->change_color("pink");
+
+    //reset gameTime
+    gametime = 5000;
   }
 }
 
@@ -159,6 +173,11 @@ void mainWidget::setCurrentStage(QListWidgetItem* item) {
 }
 
 void mainWidget::initGame(int mode) {
+  //reset key color
+  for (auto&& i : ui.keyboard_->keys)
+    i->change_color("yellow");
+  ui.health_label->setStyleSheet("");
+
   gamemode = mode;  
   switch (mode) {
     case gameMode::STAGE:
@@ -195,7 +214,6 @@ void mainWidget::initEndless() {
   ui.score_label->setText("Score: 0");
   ui.score_label->show();
   ui.health_label->setText("Health: 3");
-
 
   //init random
   qsrand(QTime(0, 0, 0).secsTo(QTime::currentTime()));
