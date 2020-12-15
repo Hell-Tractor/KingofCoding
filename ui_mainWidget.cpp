@@ -6,6 +6,7 @@
 void Ui_mainWidgetClass::setupUi(QWidget* mainWidgetClass) {
   if (mainWidgetClass->objectName().isEmpty())
     mainWidgetClass->setObjectName(QString::fromUtf8("mainWidgetClass"));
+  mainWidgetClass->setWindowIcon(QIcon("./icons/ico.png"));
   /**************settings***************/
   QSettings* settings = new QSettings("./settings.ini", QSettings::IniFormat);
   int width = settings->value("/mainWidget/width").toInt();
@@ -27,13 +28,13 @@ void Ui_mainWidgetClass::setupUi(QWidget* mainWidgetClass) {
   menu_title->addWidget(title);
   menu_title->addStretch();
   aboutbtn = new QPushButton;
-  standingbtn = new QPushButton;
+  tutorialbtn = new QPushButton;
   startbtn = new QPushButton;
   QHBoxLayout* menu_btn = new QHBoxLayout;
   menu_btn->addStretch();
   menu_btn->addWidget(aboutbtn);
   menu_btn->addStretch();
-  menu_btn->addWidget(standingbtn);
+  menu_btn->addWidget(tutorialbtn);
   menu_btn->addStretch();
   menu_btn->addWidget(startbtn);
   menu_btn->addStretch();
@@ -91,8 +92,6 @@ void Ui_mainWidgetClass::setupUi(QWidget* mainWidgetClass) {
   for (int i = 0; i < 3; ++i) {
     stage_layouts[i] = new QHBoxLayout;
     textZone[i] = new QLabel;
-    //textZone[i]->setFixedWidth(500);
-    //textZone[i]->setFixedHeight(40);
     stage_layouts[i]->addWidget(textZone[i]);
     stage_layouts[i]->addStretch();
     game_layout->addLayout(stage_layouts[i]);
@@ -118,8 +117,12 @@ void Ui_mainWidgetClass::setupUi(QWidget* mainWidgetClass) {
   //about
   QWidget* about = new QWidget;
   QVBoxLayout* about_layout = new QVBoxLayout;
+  about_layout->addStretch();
+  aboutTitle = new QLabel;
+  about_layout->addWidget(aboutTitle);
   aboutInfo = new QLabel;
   about_layout->addWidget(aboutInfo);
+  about_layout->addStretch();
   QHBoxLayout* about_btn_layout = new QHBoxLayout;
   aboutToMenu = new QPushButton;
   about_btn_layout->addStretch();
@@ -134,45 +137,91 @@ void Ui_mainWidgetClass::setupUi(QWidget* mainWidgetClass) {
 }
 
 void Ui_mainWidgetClass::retranslateUi(QWidget* mainWidgetClass) {
-  mainWidgetClass->setWindowTitle(QCoreApplication::translate("mainWidgetClass", "King of Coding-v2.1.0-alpha", nullptr));
+  mainWidgetClass->setWindowTitle(QCoreApplication::translate("mainWidgetClass", "King of Coding-v1.0.0-Beta", nullptr));
   //menu
-  this->title->setText("King of Coding\nv2.1.0-alpha");
+  QFont titleft;
+  titleft.setPointSize(60);
+  titleft.setFamily("Curlz MT");
+  this->title->setFont(titleft);
+  this->title->setText("<font color=pink>King</font>\t<font color=blue>of</font>\t<font color=indigo>Coding</font>");
   this->title->setAlignment(Qt::AlignCenter);
-  this->standingbtn->setText("Top Standings");
-  this->startbtn->setText("Start Game");
+  QFont btnft;
+  btnft.setPointSize(20);
+  btnft.setFamily("Bauhaus 93");
+  this->tutorialbtn->setFont(btnft);
+  this->tutorialbtn->setText("Tutorials");
+  this->startbtn->setFont(btnft);
+  this->startbtn->setText("Start");
+  this->aboutbtn->setFont(btnft);
   this->aboutbtn->setText("About");
   
   //mode select
+  QFont selectmTitleFt;
+  selectmTitleFt.setPointSize(50);
+  selectmTitleFt.setFamily("Berlin Sans FB Demi");
+  this->selectm_title->setFont(selectmTitleFt);
   this->selectm_title->setText("select mode");
+  this->stagebtn->setFont(btnft);
   this->stagebtn->setText("Stage mode");
+  this->endlessbtn->setFont(btnft);
   this->endlessbtn->setText("Endless mode");
+  this->backToMenu->setFont(btnft);
   this->backToMenu->setText("Back");
   
   //stage select
+  QFont stageSelectTitleFt;
+  stageSelectTitleFt.setPointSize(20);
+  stageSelectTitleFt.setFamily("Berlin Sans FB Demi");
+  this->stage_select_title->setFont(stageSelectTitleFt);
   this->stage_select_title->setText("Select Stage");
   QDir dir("./stages");
   dir.setNameFilters(QStringList("*.stg"));
   QFileInfoList stages = dir.entryInfoList();
+  QFont stageListFt;
+  stageListFt.setPointSize(15);
+  stageListFt.setFamily("Consolas");
+  this->stage_list_widget->setFont(stageListFt);
   for (auto&& i : stages)
     this->stage_list_widget->addItem(i.fileName().split('.')[0]);
+
+  this->backToMode->setFont(btnft);
   this->backToMode->setText("Back");
 
   //game
-  this->health_label->setText("Health: ");
-  this->time_label->setText("Time Used: 0.00");
-  this->score_label->setText("Score: 0");
+  QFont scoreBoardFt;
+  scoreBoardFt.setPointSize(15);
+  scoreBoardFt.setFamily("Comic Sans MS");
+  this->health_label->setFont(scoreBoardFt);
+  this->health_label->setAlignment(Qt::AlignCenter);
+  this->health_label->setText("<img src=\"./icons/health.png\">Health: ");
+  this->time_label->setFont(scoreBoardFt);
+  this->time_label->setText("<img src=\"./icons/time.png\">Time Used: 0.00");
+  //this->time_label->setSizePolicy(QSizePolicy::Policy::MinimumExpanding, QSizePolicy::Policy::MinimumExpanding);
+  this->time_label->setMinimumWidth(270);
+  this->score_label->setFont(scoreBoardFt);
+  this->score_label->setText("<img src=\"./icons/score.png\">Score: 0.00");
+  QFont textZoneFt;
+  textZoneFt.setPointSize(12);
+  for (auto&& i : this->textZone)
+    i->setFont(textZoneFt);
 
   //about
+  this->aboutToMenu->setFont(btnft);
   this->aboutToMenu->setText("Back");
+  this->aboutbtn->setFont(btnft);
   this->aboutbtn->setText("About");
-  this->aboutInfo->setText("<font size=\"3px\" face=Consolas>\
-                           < h1 style = \"text-align: center;\" > King of Coding< / h1>\
-                           < / font>\
-                           <font size = \"2px\" face=Consolas>\
-                           <p style = \"text-align: left\">Version: 2.1.0 - alpha< / p>\
-                           <p style = \"text-align: left\">Author : Chen Yiming< / p>\
-                           <p style = \"text-align: left\">Other : This program is only for personal use.<br><font style = \"color: red;\">Any acts of plagiarism is prohibitted.< / font>< / p>\
-                           < / font>");
+  QFont aboutTitleFt;
+  aboutTitleFt.setPointSize(40);
+  aboutTitleFt.setFamily("Curlz MT");
+  aboutTitleFt.setBold(true);
+  this->aboutTitle->setFont(aboutTitleFt);
+  this->aboutTitle->setAlignment(Qt::AlignCenter);
+  this->aboutTitle->setText("<font color=pink>King</font>\t<font color=blue>of</font>\t<font color=indigo>Coding</font>");
+  QFont aboutInfoFt;
+  aboutInfoFt.setPointSize(25);
+  aboutInfoFt.setFamily("Consolas");
+  this->aboutInfo->setFont(aboutInfoFt);
+  this->aboutInfo->setText("<font>Version: 1.0.0-Beta<br>Author: Chen Yiming<br>Other: This program is only for personal use.</font><br><font color=red>Any actions of plagiarism is prohibitted.</font>");
 
   this->stackedWidget->setCurrentIndex(0);
 }

@@ -19,6 +19,8 @@ mainWidget::mainWidget(QWidget *parent)
   gameText = nullptr;
   health = gametime = 0;
   score = 0;
+  count = 0;
+  isRec = false;
   timer = new QTimer();
   timer->setTimerType(Qt::TimerType::PreciseTimer);
   i = 0;
@@ -26,6 +28,9 @@ mainWidget::mainWidget(QWidget *parent)
 
   /******************connect********************/
   //buttons
+  connect(ui.tutorialbtn, &QPushButton::clicked, this, [=]() {
+    QDesktopServices::openUrl(QUrl("https://github.com/Hell-Tractor/KingofCoding"));
+          });
   connect(ui.startbtn, &QPushButton::clicked, this, [=]() {
     ui.stackedWidget->setCurrentIndex(widget::MODE_SELECT);
           });
@@ -67,7 +72,7 @@ void mainWidget::keyPressEvent(QKeyEvent* e) {
     return;
   if (gamestate == gameState::WAITING)
     gamestate = gameState::RUNNING;
-  qDebug() << "key pressed: " << (char)e->key();
+  //qDebug() << "key pressed: " << (char)e->key();
   
   switch (gamemode) {
     case gameMode::STAGE:
@@ -85,45 +90,74 @@ void mainWidget::keyPressEvent(QKeyEvent* e) {
 void mainWidget::handleKeyPress_Endless(int key) {
   if (key == currentText[1][i].toUpper().unicode()) {
     //restore key color
-    ui.keyboard_->keys[key]->change_color("yellow");
+    ui.keyboard_->keys[key]->reset_color();
     //set text color
     ui.textZone[1]->setText(QString("<font face=Consolas size=15 color=red>") + currentText[1].left(i + 1) +
                             "</font><font face=Consolas size=15>" + currentText[1].right(currentText[1].length() - i - 1) + "</font>");
     i++;
     if (i == currentText[1].length()) {
+      if (this->isRec) {
+        this->health++;
+        ui.health_label->setText(QString("<img src=\"./icons/health.png\">Health: ") + QString::number(health));
+      }
       //add score
-      score++;
-      ui.score_label->setText(QString("Score: ") + QString::number(score));
+      score += gametime / 1000.0 + (count / 5) * 1.2;
+      count++;
+      ui.score_label->setText(QString("<img src=\"./icons/score.png\">Score: ") + QString::number(score, 'f', 2));
 
       //reset timer
-      gametime = 5000;
+      gametime = 5000.0 - qLn(count + 1) * 1000;
+      if (gametime < 2000)
+        gametime = 2000;
+      qDebug() << gametime;
 
       //get new key
       i = 0;
       currentText[1] = getText();
       ui.textZone[1]->setText(QString("<font face=Consolas size=15>") + currentText[1] + "</font>");
+      
+      //generate health recovery
+      if (qrand() % 100 <= 10) {
+        this->isRec = true;
+        ui.textZone[1]->setStyleSheet("background-image: url(./icons/HealthRecBg.png); background-repeat: repeat-xy;");
+        qDebug() << "Health Recovery!";
+      } else {
+        this->isRec = false;
+        ui.textZone[1]->setStyleSheet("");
+      }
     }
     //change key color
-    ui.keyboard_->keys[currentText[1][i].toUpper().unicode()]->change_color("pink");
+    ui.keyboard_->keys[currentText[1][i].toUpper().unicode()]->highLight();
   } else {
     //restore key color
-    ui.keyboard_->keys[currentText[1][i].toUpper().unicode()]->change_color("yellow");
+    ui.keyboard_->keys[currentText[1][i].toUpper().unicode()]->reset_color();
     
     this->wrongKeyWarning();
     //get new key
     currentText[1] = getText();
     ui.textZone[1]->setText(QString("<font face=Consolas size=15>") + currentText[1] + "</font>");
-    ui.keyboard_->keys[currentText[1][i].toUpper().unicode()]->change_color("pink");
+    ui.keyboard_->keys[currentText[1][i].toUpper().unicode()]->highLight();
+
+    //generate health recovery
+    if (qrand() % 100 <= 10) {
+      this->isRec = true;
+      ui.textZone[1]->setStyleSheet("background-image: url(./icons/HealthRecBg.png); background-repeat: repeat-xy;");
+    } else {
+      this->isRec = false;
+      ui.textZone[1]->setStyleSheet("");
+    }
 
     //reset gameTime
-    gametime = 5000;
+    gametime = 5000.0 - qLn(count + 1) * 1000;
+    if (gametime < 2000)
+      gametime = 2000;
   }
 }
 
 void mainWidget::handleKeyPress_Stage(int key) {
   if (key == currentText[1][i].toUpper().unicode()) {
     //restore key color
-    ui.keyboard_->keys[key]->change_color("yellow");
+    ui.keyboard_->keys[key]->reset_color();
     //set text color
     ui.textZone[1]->setText(QString("<font face=Consolas size=15 color=red>") + currentText[1].left(i + 1) +
                             "</font><font face=Consolas size=15>" + currentText[1].right(currentText[1].length() - i - 1) + "</font>");
@@ -138,7 +172,7 @@ void mainWidget::handleKeyPress_Stage(int key) {
       i = 0;
     }
     //change key color
-    ui.keyboard_->keys[currentText[1][i].toUpper().unicode()]->change_color("pink");
+    ui.keyboard_->keys[currentText[1][i].toUpper().unicode()]->highLight();
   } else
     this->wrongKeyWarning();
 }
@@ -175,8 +209,9 @@ void mainWidget::setCurrentStage(QListWidgetItem* item) {
 void mainWidget::initGame(int mode) {
   //reset key color
   for (auto&& i : ui.keyboard_->keys)
-    i->change_color("yellow");
+    i->reset_color();
   ui.health_label->setStyleSheet("");
+  ui.textZone[1]->setStyleSheet("");
 
   gamemode = mode;  
   switch (mode) {
@@ -208,12 +243,14 @@ void mainWidget::initEndless() {
   gametime = 5 * 1000;
   score = 0;
   i = 0;
+  count = 0;
+  isRec = false;
 
   //init label
-  ui.time_label->setText("Time left: 5.00");
-  ui.score_label->setText("Score: 0");
+  ui.time_label->setText("<img src=\"./icons/time.png\">Time left: 5.00");
+  ui.score_label->setText("<img src=\"./icons/score.png\">Score: 0.00");
   ui.score_label->show();
-  ui.health_label->setText("Health: 3");
+  ui.health_label->setText("<img src=\"./icons/health.png\">Health: 3");
 
   //init random
   qsrand(QTime(0, 0, 0).secsTo(QTime::currentTime()));
@@ -223,7 +260,7 @@ void mainWidget::initEndless() {
   ui.textZone[1]->setText(QString("<font face=Consolas size=15>") + currentText[1] + "</font>");
 
   //change keyboard color
-  ui.keyboard_->keys[currentText[1][0].toUpper().unicode()]->change_color("pink");
+  ui.keyboard_->keys[currentText[1][0].toUpper().unicode()]->highLight();
 }
 
 void mainWidget::initStage() {
@@ -231,8 +268,8 @@ void mainWidget::initStage() {
   health = 3;
   gametime = 0;
   //initial label
-  ui.health_label->setText(QString("Health: ") + QString::number(health));
-  ui.time_label->setText(QString("Time Used: 0.00"));
+  ui.health_label->setText(QString("<img src=\"./icons/health.png\">Health: ") + QString::number(health));
+  ui.time_label->setText(QString("<img src=\"./icons/time.png\">Time Used: 0.00"));
 
   //hide score_label
   ui.score_label->hide();
@@ -247,13 +284,13 @@ void mainWidget::initStage() {
 
   //change key color
   qDebug() << (char)currentText[1][0].toUpper().unicode();
-  ui.keyboard_->keys[currentText[1][0].toUpper().unicode()]->change_color("pink");
+  ui.keyboard_->keys[currentText[1][0].toUpper().unicode()]->highLight();
 }
 
 void mainWidget::wrongKeyWarning() {
   //wrong key pressed
   health--;
-  ui.health_label->setText(QString("Health: ") + QString::number(health));
+  ui.health_label->setText(QString("<img src=\"./icons/health.png\">Health: ") + QString::number(health));
   //wrong key warning
   ui.health_label->setStyleSheet("background-color: red");
 
@@ -276,16 +313,19 @@ void mainWidget::Loop() {
   //update time
   if (gamestate == gameState::RUNNING && gamemode == gameMode::STAGE) {
     gametime += time_interval;
-    ui.time_label->setText(QString("Time Used: ") + QString::number(gametime / 1000.0, 'f', 2));
+    ui.time_label->setText(QString("<img src=\"./icons/time.png\">Time Used: ") + QString::number(gametime / 1000.0, 'f', 2));
   }
   if (gamestate == gameState::RUNNING && gamemode == gameMode::ENDLESS) {
     gametime -= time_interval;
     if (gametime <= 0) {
       this->wrongKeyWarning();
-      if (gamestate == gameState::RUNNING)
-        gametime = 5000;
+      if (gamestate == gameState::RUNNING) {
+        gametime = 5000.0 - qLn(count + 1) * 1000;
+        if (gametime < 2000)
+          gametime = 2000;
+      }
     }
-    ui.time_label->setText(QString("Time Left: ") + QString::number(gametime / 1000.0, 'f', 2));
+    ui.time_label->setText(QString("<img src=\"./icons/time.png\">Time Left: ") + QString::number(gametime / 1000.0, 'f', 2));
   }
   
   ui.stackedWidget->repaint();
@@ -309,7 +349,7 @@ void mainWidget::cleanUpGame(int mode, int state) {
   for (auto&& i : ui.textZone)
     i->setText("");
   for (auto&& i : ui.keyboard_->keys)
-    i->change_color("yellow");
+    i->reset_color();
   ui.health_label->setStyleSheet("");
 
   if (mode == gameMode::STAGE) {

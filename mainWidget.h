@@ -51,7 +51,9 @@ class mainWidget : public QWidget {
     QString currentStage, currentText[3];
     QFile* gameText;
     int gamestate;
-    int health, gametime, gamemode, score;
+    int health, gametime, gamemode, count;
+    bool isRec;
+    double score;
     QTimer* timer;
     QByteArrayList keylist;
 

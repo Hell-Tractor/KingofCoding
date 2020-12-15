@@ -19,7 +19,7 @@ class Ui_mainWidgetClass
   public:
     QStackedWidget* stackedWidget;
     //menu
-    QPushButton* startbtn, * standingbtn, * aboutbtn;
+    QPushButton* startbtn, * aboutbtn, * tutorialbtn;
     QLabel* title;
 
     //mode select
@@ -37,7 +37,7 @@ class Ui_mainWidgetClass
 
     //about
     QPushButton* aboutToMenu;
-    QLabel* aboutInfo;
+    QLabel* aboutInfo, * aboutTitle;
 
     void setupUi(QWidget* mainWidgetClass);
     void retranslateUi(QWidget* mainWidgetClass);

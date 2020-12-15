@@ -5,7 +5,10 @@
 class key : public QLabel {
 	public:
 		key(char ch, QWidget* parent = 0);
-		void change_color(QString col);
+		void highLight();
+		void reset_color();
 	private:
 		int text_size;
+		QString keySyle;
+		QString defaultColor;
 };

@@ -1,3 +1,10 @@
+### beta 1.0.0
+
+- 美化了界面
+- 删除了TopStanding界面
+- 优化了endless模式计分规则
+- 添加了教程按钮
+
 ### alpha 2.1.0
 
 - 添加了About界面

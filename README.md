@@ -4,7 +4,7 @@
 ## Installation
 
 - 解压
-- 双击运行
+- 双击King of Coding.exe运行
 
 ## Tutorials
 
@@ -12,6 +12,7 @@
 - 选择你想游玩的模式/关卡
 - 按下提示的对应按键
 - 争取获得高分吧！
+- Endless模式下会有特殊字符可以恢复生命值哦
 
 ## How to add custom stages
 
@@ -22,9 +23,7 @@
 
 ## Notes
 
-- 点击无效的按钮均为未添加功能的按钮
-- UI还没来得及美化，别催，别喷
-- 当前为内测版本，如发现bug请联系我
+- 当前为公测版本(beta 1.0.0)，如发现bug请联系我
 
 ## Maintainers
 
