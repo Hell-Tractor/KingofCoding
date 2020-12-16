@@ -85,34 +85,12 @@ void Ui_mainWidgetClass::setupUi(QWidget* mainWidgetClass) {
   stackedWidget->addWidget(stage_select);
 
   //game
-  QWidget* game = new QWidget;
-  QVBoxLayout* game_layout = new QVBoxLayout;
-  //stage
-  QHBoxLayout* stage_layouts[3];
-  for (int i = 0; i < 3; ++i) {
-    stage_layouts[i] = new QHBoxLayout;
-    textZone[i] = new QLabel;
-    stage_layouts[i]->addWidget(textZone[i]);
-    stage_layouts[i]->addStretch();
-    game_layout->addLayout(stage_layouts[i]);
-  }
-  //scoreboard
-  QHBoxLayout* scoreboard_layout = new QHBoxLayout;
-  health_label = new QLabel;
-  score_label = new QLabel;
-  time_label = new QLabel;
-  scoreboard_layout->addWidget(health_label);
-  scoreboard_layout->addStretch();
-  scoreboard_layout->addWidget(score_label);
-  scoreboard_layout->addStretch();
-  scoreboard_layout->addWidget(time_label);
-  game_layout->addLayout(scoreboard_layout);
-  //keyboard
-  keyboard_ = new keyboard;
-  game_layout->addLayout(keyboard_->keyboard_layout);
-  //apply
-  game->setLayout(game_layout);
-  stackedWidget->addWidget(game);
+  endlessModeWidget = new endlessMode(nullptr);
+  stackedWidget->addWidget(endlessModeWidget);
+
+  //stagemode widget
+  stageModeWidget = new stageMode(nullptr);
+  stackedWidget->addWidget(stageModeWidget);
 
   //about
   QWidget* about = new QWidget;
@@ -137,7 +115,7 @@ void Ui_mainWidgetClass::setupUi(QWidget* mainWidgetClass) {
 }
 
 void Ui_mainWidgetClass::retranslateUi(QWidget* mainWidgetClass) {
-  mainWidgetClass->setWindowTitle(QCoreApplication::translate("mainWidgetClass", "King of Coding-v1.0.0-Beta", nullptr));
+  mainWidgetClass->setWindowTitle(QCoreApplication::translate("mainWidgetClass", "King of Coding-v1.1.0-Beta", nullptr));
   //menu
   QFont titleft;
   titleft.setPointSize(60);
@@ -187,23 +165,9 @@ void Ui_mainWidgetClass::retranslateUi(QWidget* mainWidgetClass) {
   this->backToMode->setFont(btnft);
   this->backToMode->setText("Back");
 
-  //game
-  QFont scoreBoardFt;
-  scoreBoardFt.setPointSize(15);
-  scoreBoardFt.setFamily("Comic Sans MS");
-  this->health_label->setFont(scoreBoardFt);
-  this->health_label->setAlignment(Qt::AlignCenter);
-  this->health_label->setText("<img src=\"./icons/health.png\">Health: ");
-  this->time_label->setFont(scoreBoardFt);
-  this->time_label->setText("<img src=\"./icons/time.png\">Time Used: 0.00");
-  //this->time_label->setSizePolicy(QSizePolicy::Policy::MinimumExpanding, QSizePolicy::Policy::MinimumExpanding);
-  this->time_label->setMinimumWidth(270);
-  this->score_label->setFont(scoreBoardFt);
-  this->score_label->setText("<img src=\"./icons/score.png\">Score: 0.00");
-  QFont textZoneFt;
-  textZoneFt.setPointSize(12);
-  for (auto&& i : this->textZone)
-    i->setFont(textZoneFt);
+  //game widget
+  this->endlessModeWidget->retranslateUi();
+  this->stageModeWidget->retranslateUi();
 
   //about
   this->aboutToMenu->setFont(btnft);
@@ -221,7 +185,7 @@ void Ui_mainWidgetClass::retranslateUi(QWidget* mainWidgetClass) {
   aboutInfoFt.setPointSize(25);
   aboutInfoFt.setFamily("Consolas");
   this->aboutInfo->setFont(aboutInfoFt);
-  this->aboutInfo->setText("<font>Version: 1.0.0-Beta<br>Author: Chen Yiming<br>Other: This program is only for personal use.</font><br><font color=red>Any actions of plagiarism is prohibitted.</font>");
+  this->aboutInfo->setText("<font>Version: 1.1.0-Beta<br>Author: Chen Yiming<br>Other: This program is only for personal use.</font><br><font color=red>Any actions of plagiarism is prohibitted.</font>");
 
   this->stackedWidget->setCurrentIndex(0);
 }

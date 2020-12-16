@@ -11,6 +11,8 @@
 #include <qlistwidget.h>
 #include <qsettings.h>
 #include "keyboard.h"
+#include "stageMode.h"
+#include "endlessMode.h"
 
 QT_BEGIN_NAMESPACE
 
@@ -31,9 +33,9 @@ class Ui_mainWidgetClass
     QListWidget* stage_list_widget;
     QPushButton* backToMode;
 
-    //game
-    keyboard* keyboard_;
-    QLabel* textZone[3], * health_label, * time_label, * score_label;
+    //gamemode
+    stageMode* stageModeWidget;
+    endlessMode* endlessModeWidget;
 
     //about
     QPushButton* aboutToMenu;

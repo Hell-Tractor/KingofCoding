@@ -11,19 +11,11 @@ mainWidget::mainWidget(QWidget *parent)
    
   /********************init********************/
   QSettings* settings = new QSettings("./settings.ini", QSettings::IniFormat);
-  length_per_label = settings->value("/game/length_per_label").toInt();
   time_interval = settings->value("/game/refresh_interval").toInt();
   delete settings;
-  gamestate = gameState::UN_STARTED;
-  gamemode = -1;
-  gameText = nullptr;
-  health = gametime = 0;
-  score = 0;
-  count = 0;
-  isRec = false;
+  gamemode = gameMode::NONE;
   timer = new QTimer();
   timer->setTimerType(Qt::TimerType::PreciseTimer);
-  i = 0;
   /********************init********************/
 
   /******************connect********************/
@@ -44,20 +36,24 @@ mainWidget::mainWidget(QWidget *parent)
     ui.stackedWidget->setCurrentIndex(widget::MODE_SELECT);
           });
   connect(ui.endlessbtn, &QPushButton::clicked, this, [=]() {
-    ui.stackedWidget->setCurrentIndex(widget::GAME);
+    ui.stackedWidget->setCurrentIndex(widget::ENDLESSMODE);
     emit GameStart(gameMode::ENDLESS);
           });
   connect(ui.aboutbtn, &QPushButton::clicked, this, [=]() {
     ui.stackedWidget->setCurrentIndex(widget::ABOUT);
-    qDebug() << ui.stackedWidget->width() << ' ' << ui.stackedWidget->height();
           });
   connect(ui.aboutToMenu, &QPushButton::clicked, this, [=]() {
     ui.stackedWidget->setCurrentIndex(widget::MENU);
           });
+  connect(ui.stageModeWidget, &stageMode::exitGameInterface, this, [=]() {
+    ui.stackedWidget->setCurrentIndex(widget::STAGE_SELECT);
+          });
+  connect(ui.endlessModeWidget, &endlessMode::exitGameInterface, this, [=]() {
+    ui.stackedWidget->setCurrentIndex(widget::MODE_SELECT);
+          });
 
   connect(ui.stage_list_widget, &QListWidget::itemDoubleClicked, this, &mainWidget::setCurrentStage);
   connect(this, &mainWidget::GameStart, this, &mainWidget::initGame);
-  connect(this, &mainWidget::GameEnds, this, &mainWidget::cleanUpGame);
   connect(this->timer, &QTimer::timeout, this, &mainWidget::Loop);
   /******************connect********************/
 
@@ -68,18 +64,12 @@ mainWidget::~mainWidget() {
 }
 
 void mainWidget::keyPressEvent(QKeyEvent* e) {
-  if (gamestate != gameState::RUNNING && gamestate != gameState::WAITING)
-    return;
-  if (gamestate == gameState::WAITING)
-    gamestate = gameState::RUNNING;
-  //qDebug() << "key pressed: " << (char)e->key();
-  
   switch (gamemode) {
     case gameMode::STAGE:
-      this->handleKeyPress_Stage(e->key());
+      ui.stageModeWidget->handleKeyPress(e->key());
       break;
     case gameMode::ENDLESS:
-      this->handleKeyPress_Endless(e->key());
+      ui.endlessModeWidget->handleKeyPress(e->key());
       break;
     default:
       throw "Unknown game mode";
@@ -87,288 +77,33 @@ void mainWidget::keyPressEvent(QKeyEvent* e) {
   }
 }
 
-void mainWidget::handleKeyPress_Endless(int key) {
-  if (key == currentText[1][i].toUpper().unicode()) {
-    //restore key color
-    ui.keyboard_->keys[key]->reset_color();
-    //set text color
-    ui.textZone[1]->setText(QString("<font face=Consolas size=15 color=red>") + currentText[1].left(i + 1) +
-                            "</font><font face=Consolas size=15>" + currentText[1].right(currentText[1].length() - i - 1) + "</font>");
-    i++;
-    if (i == currentText[1].length()) {
-      if (this->isRec) {
-        this->health++;
-        ui.health_label->setText(QString("<img src=\"./icons/health.png\">Health: ") + QString::number(health));
-      }
-      //add score
-      score += gametime / 1000.0 + (count / 5) * 1.2;
-      count++;
-      ui.score_label->setText(QString("<img src=\"./icons/score.png\">Score: ") + QString::number(score, 'f', 2));
-
-      //reset timer
-      gametime = 5000.0 - qLn(count + 1) * 1000;
-      if (gametime < 2000)
-        gametime = 2000;
-      qDebug() << gametime;
-
-      //get new key
-      i = 0;
-      currentText[1] = getText();
-      ui.textZone[1]->setText(QString("<font face=Consolas size=15>") + currentText[1] + "</font>");
-      
-      //generate health recovery
-      if (qrand() % 100 <= 10) {
-        this->isRec = true;
-        ui.textZone[1]->setStyleSheet("background-image: url(./icons/HealthRecBg.png); background-repeat: repeat-xy;");
-        qDebug() << "Health Recovery!";
-      } else {
-        this->isRec = false;
-        ui.textZone[1]->setStyleSheet("");
-      }
-    }
-    //change key color
-    ui.keyboard_->keys[currentText[1][i].toUpper().unicode()]->highLight();
-  } else {
-    //restore key color
-    ui.keyboard_->keys[currentText[1][i].toUpper().unicode()]->reset_color();
-    
-    this->wrongKeyWarning();
-    //get new key
-    currentText[1] = getText();
-    ui.textZone[1]->setText(QString("<font face=Consolas size=15>") + currentText[1] + "</font>");
-    ui.keyboard_->keys[currentText[1][i].toUpper().unicode()]->highLight();
-
-    //generate health recovery
-    if (qrand() % 100 <= 10) {
-      this->isRec = true;
-      ui.textZone[1]->setStyleSheet("background-image: url(./icons/HealthRecBg.png); background-repeat: repeat-xy;");
-    } else {
-      this->isRec = false;
-      ui.textZone[1]->setStyleSheet("");
-    }
-
-    //reset gameTime
-    gametime = 5000.0 - qLn(count + 1) * 1000;
-    if (gametime < 2000)
-      gametime = 2000;
-  }
-}
-
-void mainWidget::handleKeyPress_Stage(int key) {
-  if (key == currentText[1][i].toUpper().unicode()) {
-    //restore key color
-    ui.keyboard_->keys[key]->reset_color();
-    //set text color
-    ui.textZone[1]->setText(QString("<font face=Consolas size=15 color=red>") + currentText[1].left(i + 1) +
-                            "</font><font face=Consolas size=15>" + currentText[1].right(currentText[1].length() - i - 1) + "</font>");
-    i++;
-    //check legality of i
-    if (i == currentText[1].length()) {
-      if (!updateText()) {
-        emit GameEnds(gameMode::STAGE, gameState::WIN);
-        i = 0;
-        return;
-      }
-      i = 0;
-    }
-    //change key color
-    ui.keyboard_->keys[currentText[1][i].toUpper().unicode()]->highLight();
-  } else
-    this->wrongKeyWarning();
-}
-
-bool mainWidget::updateText() {
-  QString text;
-  char c;
-  //read text from file
-  while (this->gameText->getChar(&c)) {
-    if (isalpha(c))
-      text.push_back(c);
-    if (text.length() == length_per_label)
-      break;
-  }
-  qDebug() << text;
-  //update textZone
-  for (int i = 0; i < 2; ++i) {
-    ui.textZone[i]->setText(ui.textZone[i + 1]->text());
-    currentText[i] = currentText[i + 1];
-  }
-  ui.textZone[2]->setText(QString("<font face=Consolas size=15>") + text + "</font>");
-  currentText[2] = text;
-  return !currentText[1].isEmpty();
-}
-
 void mainWidget::setCurrentStage(QListWidgetItem* item) {
-  currentStage = item->text();
-  qDebug() << "currentStage changed: " << currentStage;
-
-  ui.stackedWidget->setCurrentIndex(widget::GAME);
+  ui.stageModeWidget->setCurrentStage(item->text());
+  ui.stackedWidget->setCurrentIndex(widget::STAGEMODE);
   emit GameStart(gameMode::STAGE);
 }
 
-void mainWidget::initGame(int mode) {
-  //reset key color
-  for (auto&& i : ui.keyboard_->keys)
-    i->reset_color();
-  ui.health_label->setStyleSheet("");
-  ui.textZone[1]->setStyleSheet("");
-
+void mainWidget::initGame(gameMode mode) {
   gamemode = mode;  
   switch (mode) {
     case gameMode::STAGE:
-      this->initStage();
+      ui.stageModeWidget->init();
       break;
     case gameMode::ENDLESS:
-      this->initEndless();
+      ui.endlessModeWidget->init();
       break;
     default:
       throw "Unknown game mode";
       return;
   }
-
-  gamestate = gameState::WAITING;
-}
-
-void mainWidget::initEndless() {
-  //get keys list
-  QFile keys("./keys");
-  if (!keys.exists())
-    throw "document keys lost!";
-  keys.open(QIODevice::ReadOnly | QIODevice::Text);
-  keylist = keys.readAll().split('\n');
-  qDebug() << keylist[0] << ' ' << keylist.length();
-
-  //init varible
-  health = 3;
-  gametime = 5 * 1000;
-  score = 0;
-  i = 0;
-  count = 0;
-  isRec = false;
-
-  //init label
-  ui.time_label->setText("<img src=\"./icons/time.png\">Time left: 5.00");
-  ui.score_label->setText("<img src=\"./icons/score.png\">Score: 0.00");
-  ui.score_label->show();
-  ui.health_label->setText("<img src=\"./icons/health.png\">Health: 3");
-
-  //init random
-  qsrand(QTime(0, 0, 0).secsTo(QTime::currentTime()));
-
-  //show first word
-  currentText[1] = getText();
-  ui.textZone[1]->setText(QString("<font face=Consolas size=15>") + currentText[1] + "</font>");
-
-  //change keyboard color
-  ui.keyboard_->keys[currentText[1][0].toUpper().unicode()]->highLight();
-}
-
-void mainWidget::initStage() {
-  i = 0;
-  health = 3;
-  gametime = 0;
-  //initial label
-  ui.health_label->setText(QString("<img src=\"./icons/health.png\">Health: ") + QString::number(health));
-  ui.time_label->setText(QString("<img src=\"./icons/time.png\">Time Used: 0.00"));
-
-  //hide score_label
-  ui.score_label->hide();
-
-  //set text file
-  gameText = new QFile(QString("./stages/") + currentStage + ".stg");
-  gameText->open(QIODevice::ReadOnly | QIODevice::Text);
-
-  //update text
-  this->updateText();
-  this->updateText();
-
-  //change key color
-  qDebug() << (char)currentText[1][0].toUpper().unicode();
-  ui.keyboard_->keys[currentText[1][0].toUpper().unicode()]->highLight();
-}
-
-void mainWidget::wrongKeyWarning() {
-  //wrong key pressed
-  health--;
-  ui.health_label->setText(QString("<img src=\"./icons/health.png\">Health: ") + QString::number(health));
-  //wrong key warning
-  ui.health_label->setStyleSheet("background-color: red");
-
-  //died
-  if (health == 0) {
-    emit GameEnds(gamemode, gameState::LOSE);
-    i = 0;
-    return;
-  }
-
-  //dewarn
-  QTimer::singleShot(100, Qt::TimerType::CoarseTimer, [=]() {
-    ui.health_label->setStyleSheet("");
-                     });
-  if (gamemode == gameMode::ENDLESS)
-    i = 0;
 }
 
 void mainWidget::Loop() {
   //update time
-  if (gamestate == gameState::RUNNING && gamemode == gameMode::STAGE) {
-    gametime += time_interval;
-    ui.time_label->setText(QString("<img src=\"./icons/time.png\">Time Used: ") + QString::number(gametime / 1000.0, 'f', 2));
-  }
-  if (gamestate == gameState::RUNNING && gamemode == gameMode::ENDLESS) {
-    gametime -= time_interval;
-    if (gametime <= 0) {
-      this->wrongKeyWarning();
-      if (gamestate == gameState::RUNNING) {
-        gametime = 5000.0 - qLn(count + 1) * 1000;
-        if (gametime < 2000)
-          gametime = 2000;
-      }
-    }
-    ui.time_label->setText(QString("<img src=\"./icons/time.png\">Time Left: ") + QString::number(gametime / 1000.0, 'f', 2));
-  }
+  if (ui.stageModeWidget->GameState() == gamemodeBase::gameState::RUNNING && gamemode == gameMode::STAGE)
+    ui.stageModeWidget->addTime(time_interval);
+  if (ui.endlessModeWidget->GameState() == gamemodeBase::gameState::RUNNING && gamemode == gameMode::ENDLESS)
+    ui.endlessModeWidget->addTime(-time_interval);
   
   ui.stackedWidget->repaint();
-}
-
-void mainWidget::cleanUpGame(int mode, int state) {
-  //update gamestate
-  gamestate = state;
-  gamemode = mode;
-
-  //show message and block current thread
-  if (state == gameState::WIN)
-    QMessageBox::information(this, "Congratulations!", QString("Your time: ") + QString::number(gametime / 1000.0, 'f', 2), QMessageBox::Yes);
-  else if (state == gameState::LOSE && mode == gameMode::STAGE)
-    QMessageBox::information(this, "Game Over!", "You have lost all of your health", QMessageBox::Yes);
-  else if (state == gameState::LOSE && mode == gameMode::ENDLESS) {
-    QMessageBox::information(this, "Game Over!", QString("You have lost all of your health\nYour final score: ") + QString::number(score), QMessageBox::Yes);
-  } else
-    throw "UnKnown GameState";
-  
-  for (auto&& i : ui.textZone)
-    i->setText("");
-  for (auto&& i : ui.keyboard_->keys)
-    i->reset_color();
-  ui.health_label->setStyleSheet("");
-
-  if (mode == gameMode::STAGE) {
-    //change widget and initial labels
-    ui.stackedWidget->setCurrentIndex(widget::STAGE_SELECT);
-
-    //close gamefile
-    gameText->close();
-    delete gameText;
-    gameText = nullptr;
-  } else if (mode == gameMode::ENDLESS) {
-    //change widget and initial labels
-    ui.stackedWidget->setCurrentIndex(widget::MODE_SELECT);
-  }
-
-  //update gamestate
-  gamestate = gameState::UN_STARTED;
-}
-
-QString mainWidget::getText() {
-  return keylist[qrand() % keylist.length()];
 }

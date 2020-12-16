@@ -13,49 +13,28 @@ class mainWidget : public QWidget {
     mainWidget(QWidget *parent = Q_NULLPTR);
     ~mainWidget();
     enum widget {
-      MENU, MODE_SELECT, STAGE_SELECT, GAME, ABOUT
+      MENU, MODE_SELECT, STAGE_SELECT, ENDLESSMODE, STAGEMODE, ABOUT
     };
 
-    enum gameMode {
-      STAGE, ENDLESS
-    };
-
-    enum gameState {
-      UN_STARTED, WAITING, RUNNING, WIN, LOSE
+    enum class gameMode {
+      NONE, STAGE, ENDLESS
     };
 
   signals:
-    void GameStart(int mode);
-    void GameEnds(int mode, int state);
+    void GameStart(gameMode mode);
 
   private slots:
     void setCurrentStage(QListWidgetItem* item);
-    void initGame(int mode);
-    void cleanUpGame(int mode, int state);
+    void initGame(gameMode mode);
     void Loop();
 
   private:
-    bool updateText();
     void keyPressEvent(QKeyEvent* e);
-    void handleKeyPress_Stage(int key);
-    void handleKeyPress_Endless(int key);
-    void initStage();
-    void initEndless();
-    void wrongKeyWarning();
-    QString getText();
 
-    int length_per_label;
     int time_interval;
 
     Ui::mainWidgetClass ui;
-    QString currentStage, currentText[3];
-    QFile* gameText;
-    int gamestate;
-    int health, gametime, gamemode, count;
-    bool isRec;
-    double score;
     QTimer* timer;
-    QByteArrayList keylist;
-
-    int i; //record current po  sition
+    
+    gameMode gamemode;
 };

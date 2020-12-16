@@ -21,6 +21,12 @@
     <Filter Include="Description Files">
       <UniqueIdentifier>{4d4f729f-a411-4202-aca7-256fb6980162}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\gamemode">
+      <UniqueIdentifier>{460a4586-a6c8-49c6-8177-5f81d695bf1b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\gamemode">
+      <UniqueIdentifier>{a4c6470b-0ec5-4cc7-8628-c1475f3832c7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="mainWidget.h">
@@ -35,6 +41,9 @@
     <ClCompile Include="stdafx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <QtMoc Include="gamemodeBase.h">
+      <Filter>Header Files\gamemode</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -49,6 +58,15 @@
     <ClCompile Include="keyboard.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="gamemodeBase.cpp">
+      <Filter>Source Files\gamemode</Filter>
+    </ClCompile>
+    <ClCompile Include="stageMode.cpp">
+      <Filter>Source Files\gamemode</Filter>
+    </ClCompile>
+    <ClCompile Include="endlessMode.cpp">
+      <Filter>Source Files\gamemode</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ui_mainWidget.h">
@@ -59,6 +77,12 @@
     </ClInclude>
     <ClInclude Include="key.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="stageMode.h">
+      <Filter>Header Files\gamemode</Filter>
+    </ClInclude>
+    <ClInclude Include="endlessMode.h">
+      <Filter>Header Files\gamemode</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

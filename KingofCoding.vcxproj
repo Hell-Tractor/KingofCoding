@@ -96,9 +96,15 @@
     </QtMoc>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="endlessMode.cpp" />
+    <ClCompile Include="gamemodeBase.cpp" />
     <ClCompile Include="key.cpp" />
     <ClCompile Include="keyboard.cpp" />
+    <ClCompile Include="stageMode.cpp" />
+    <ClInclude Include="endlessMode.h" />
+    <ClInclude Include="stageMode.h" />
     <ClCompile Include="ui_mainWidget.cpp" />
+    <QtMoc Include="gamemodeBase.h" />
     <ClInclude Include="key.h" />
     <ClInclude Include="keyboard.h" />
     <ClInclude Include="ui_mainWidget.h" />
