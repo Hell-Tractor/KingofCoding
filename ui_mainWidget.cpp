@@ -122,7 +122,7 @@ void Ui_mainWidgetClass::setupUi(QWidget* mainWidgetClass) {
 }
 
 void Ui_mainWidgetClass::retranslateUi(QWidget* mainWidgetClass) {
-  mainWidgetClass->setWindowTitle(QCoreApplication::translate("mainWidgetClass", "King of Coding-v2.0.0-Beta", nullptr));
+  mainWidgetClass->setWindowTitle(QCoreApplication::translate("mainWidgetClass", "King of Coding-v2.0.1-Beta", nullptr));
   //menu
   QFont titleft;
   titleft.setPointSize(60);
@@ -195,7 +195,7 @@ void Ui_mainWidgetClass::retranslateUi(QWidget* mainWidgetClass) {
   aboutInfoFt.setPointSize(20);
   aboutInfoFt.setFamily("Consolas");
   this->aboutInfo->setFont(aboutInfoFt);
-  this->aboutInfo->setText("<font>Version: 2.0.0-Beta<br>Author: Chen Yiming<br>Other: This program is only for personal use.</font><br><font color=red>Any actions of plagiarism is prohibitted.</font>");
+  this->aboutInfo->setText("<font>Version: 2.0.1-Beta<br>Author: Chen Yiming<br>Other: This program is only for personal use.</font><br><font color=red>Any actions of plagiarism is prohibitted.</font>");
 
   this->stackedWidget->setCurrentIndex(0);
 }
