@@ -13,6 +13,7 @@
 #include "keyboard.h"
 #include "stageMode.h"
 #include "endlessMode.h"
+#include "fallingMode.h"
 
 QT_BEGIN_NAMESPACE
 
@@ -25,7 +26,7 @@ class Ui_mainWidgetClass
     QLabel* title;
 
     //mode select
-    QPushButton* stagebtn, * endlessbtn, * backToMenu;
+    QPushButton* stagebtn, * endlessbtn, * fallingbtn, * backToMenu;
     QLabel* selectm_title;
     
     //stage select
@@ -36,6 +37,7 @@ class Ui_mainWidgetClass
     //gamemode
     stageMode* stageModeWidget;
     endlessMode* endlessModeWidget;
+    fallingMode* fallingModeWidget;
 
     //about
     QPushButton* aboutToMenu;

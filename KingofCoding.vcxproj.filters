@@ -9,10 +9,6 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
     </Filter>
-    <Filter Include="Form Files">
-      <UniqueIdentifier>{99349809-55BA-4b9d-BF79-8FDBB0286EB3}</UniqueIdentifier>
-      <Extensions>ui</Extensions>
-    </Filter>
     <Filter Include="Resource Files">
       <UniqueIdentifier>{D9D6E242-F8AF-46E4-B9FD-80ECBC20BA3E}</UniqueIdentifier>
       <Extensions>qrc;*</Extensions>
@@ -44,6 +40,9 @@
     <QtMoc Include="gamemodeBase.h">
       <Filter>Header Files\gamemode</Filter>
     </QtMoc>
+    <QtMoc Include="fallingMode.h">
+      <Filter>Header Files\gamemode</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -65,6 +64,9 @@
       <Filter>Source Files\gamemode</Filter>
     </ClCompile>
     <ClCompile Include="endlessMode.cpp">
+      <Filter>Source Files\gamemode</Filter>
+    </ClCompile>
+    <ClCompile Include="fallingMode.cpp">
       <Filter>Source Files\gamemode</Filter>
     </ClCompile>
   </ItemGroup>
@@ -98,5 +100,10 @@
     <None Include="settings.ini">
       <Filter>Resource Files</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="letters">
+      <Filter>Resource Files</Filter>
+    </Text>
   </ItemGroup>
 </Project>

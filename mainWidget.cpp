@@ -39,6 +39,10 @@ mainWidget::mainWidget(QWidget *parent)
     ui.stackedWidget->setCurrentIndex(widget::ENDLESSMODE);
     emit GameStart(gameMode::ENDLESS);
           });
+  connect(ui.fallingbtn, &QPushButton::clicked, this, [=]() {
+    ui.stackedWidget->setCurrentIndex(widget::FALLINGMODE);
+    emit GameStart(gameMode::FALLING);
+          });
   connect(ui.aboutbtn, &QPushButton::clicked, this, [=]() {
     ui.stackedWidget->setCurrentIndex(widget::ABOUT);
           });
@@ -49,6 +53,9 @@ mainWidget::mainWidget(QWidget *parent)
     ui.stackedWidget->setCurrentIndex(widget::STAGE_SELECT);
           });
   connect(ui.endlessModeWidget, &endlessMode::exitGameInterface, this, [=]() {
+    ui.stackedWidget->setCurrentIndex(widget::MODE_SELECT);
+          });
+  connect(ui.fallingModeWidget, &fallingMode::exitGameInterface, this, [=]() {
     ui.stackedWidget->setCurrentIndex(widget::MODE_SELECT);
           });
 
@@ -64,12 +71,19 @@ mainWidget::~mainWidget() {
 }
 
 void mainWidget::keyPressEvent(QKeyEvent* e) {
+  if (e->key() == '1')
+    ui.stackedWidget->setCurrentIndex(widget::FALLINGMODE);
   switch (gamemode) {
     case gameMode::STAGE:
       ui.stageModeWidget->handleKeyPress(e->key());
       break;
     case gameMode::ENDLESS:
       ui.endlessModeWidget->handleKeyPress(e->key());
+      break;
+    case gameMode::FALLING:
+      ui.fallingModeWidget->handleKeyPress(e->key());
+      break;
+    case gameMode::NONE:
       break;
     default:
       throw "Unknown game mode";
@@ -92,6 +106,9 @@ void mainWidget::initGame(gameMode mode) {
     case gameMode::ENDLESS:
       ui.endlessModeWidget->init();
       break;
+    case gameMode::FALLING:
+      ui.fallingModeWidget->init();
+      break;
     default:
       throw "Unknown game mode";
       return;
@@ -104,6 +121,9 @@ void mainWidget::Loop() {
     ui.stageModeWidget->addTime(time_interval);
   if (ui.endlessModeWidget->GameState() == gamemodeBase::gameState::RUNNING && gamemode == gameMode::ENDLESS)
     ui.endlessModeWidget->addTime(-time_interval);
+  if (ui.fallingModeWidget->GameState() == gamemodeBase::gameState::RUNNING && gamemode == gameMode::FALLING) {
+    ui.fallingModeWidget->moveDown();
+  }
   
-  ui.stackedWidget->repaint();
+  ui.stackedWidget->update();
 }

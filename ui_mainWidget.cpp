@@ -54,11 +54,14 @@ void Ui_mainWidgetClass::setupUi(QWidget* mainWidgetClass) {
   QHBoxLayout* selectbtn_layout = new QHBoxLayout;
   stagebtn = new QPushButton;
   endlessbtn = new QPushButton;
+  fallingbtn = new QPushButton;
   backToMenu = new QPushButton;
   selectbtn_layout->addStretch();
   selectbtn_layout->addWidget(stagebtn);
   selectbtn_layout->addStretch();
   selectbtn_layout->addWidget(endlessbtn);
+  selectbtn_layout->addStretch();
+  selectbtn_layout->addWidget(fallingbtn);
   selectbtn_layout->addStretch();
   selectbtn_layout->addWidget(backToMenu);
   selectbtn_layout->addStretch();
@@ -84,13 +87,17 @@ void Ui_mainWidgetClass::setupUi(QWidget* mainWidgetClass) {
   stage_select->setLayout(stage_select_layout);
   stackedWidget->addWidget(stage_select);
 
-  //game
+  //endlessmode widget
   endlessModeWidget = new endlessMode(nullptr);
   stackedWidget->addWidget(endlessModeWidget);
 
   //stagemode widget
   stageModeWidget = new stageMode(nullptr);
   stackedWidget->addWidget(stageModeWidget);
+
+  //fallingmode widget
+  fallingModeWidget = new fallingMode(nullptr);
+  stackedWidget->addWidget(fallingModeWidget);
 
   //about
   QWidget* about = new QWidget;
@@ -115,7 +122,7 @@ void Ui_mainWidgetClass::setupUi(QWidget* mainWidgetClass) {
 }
 
 void Ui_mainWidgetClass::retranslateUi(QWidget* mainWidgetClass) {
-  mainWidgetClass->setWindowTitle(QCoreApplication::translate("mainWidgetClass", "King of Coding-v1.1.0-Beta", nullptr));
+  mainWidgetClass->setWindowTitle(QCoreApplication::translate("mainWidgetClass", "King of Coding-v2.0.0-Beta", nullptr));
   //menu
   QFont titleft;
   titleft.setPointSize(60);
@@ -143,6 +150,8 @@ void Ui_mainWidgetClass::retranslateUi(QWidget* mainWidgetClass) {
   this->stagebtn->setText("Stage mode");
   this->endlessbtn->setFont(btnft);
   this->endlessbtn->setText("Endless mode");
+  this->fallingbtn->setFont(btnft);
+  this->fallingbtn->setText("Falling mode");
   this->backToMenu->setFont(btnft);
   this->backToMenu->setText("Back");
   
@@ -168,6 +177,7 @@ void Ui_mainWidgetClass::retranslateUi(QWidget* mainWidgetClass) {
   //game widget
   this->endlessModeWidget->retranslateUi();
   this->stageModeWidget->retranslateUi();
+  this->fallingModeWidget->retranslateUi();
 
   //about
   this->aboutToMenu->setFont(btnft);
@@ -182,10 +192,10 @@ void Ui_mainWidgetClass::retranslateUi(QWidget* mainWidgetClass) {
   this->aboutTitle->setAlignment(Qt::AlignCenter);
   this->aboutTitle->setText("<font color=pink>King</font>\t<font color=blue>of</font>\t<font color=indigo>Coding</font>");
   QFont aboutInfoFt;
-  aboutInfoFt.setPointSize(25);
+  aboutInfoFt.setPointSize(20);
   aboutInfoFt.setFamily("Consolas");
   this->aboutInfo->setFont(aboutInfoFt);
-  this->aboutInfo->setText("<font>Version: 1.1.0-Beta<br>Author: Chen Yiming<br>Other: This program is only for personal use.</font><br><font color=red>Any actions of plagiarism is prohibitted.</font>");
+  this->aboutInfo->setText("<font>Version: 2.0.0-Beta<br>Author: Chen Yiming<br>Other: This program is only for personal use.</font><br><font color=red>Any actions of plagiarism is prohibitted.</font>");
 
   this->stackedWidget->setCurrentIndex(0);
 }

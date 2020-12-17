@@ -7,6 +7,13 @@
 #include <QTimer>
 
 endlessMode::endlessMode(QWidget* parent) : gamemodeBase(parent) {
+	//get keys list
+	QFile keys("./keys");
+	if (!keys.exists())
+		throw std::runtime_error("File \"keys\" lost!");
+	keys.open(QIODevice::ReadOnly | QIODevice::Text);
+	keyList = keys.readAll().split('\n');
+
 	//init
 	i = 0;
 	health = 3;
@@ -21,6 +28,7 @@ endlessMode::endlessMode(QWidget* parent) : gamemodeBase(parent) {
 	gameLayout->addStretch();
 	textLayout = new QHBoxLayout;
 	textLabel = new QLabel;
+	textLayout->addStretch();
 	textLayout->addWidget(textLabel);
 	textLayout->addStretch();
 	gameLayout->addLayout(textLayout);
@@ -140,13 +148,6 @@ void endlessMode::handleKeyPress(int key) {
 }
 
 void endlessMode::init() {
-	//get keys list
-	QFile keys("./keys");
-	if (!keys.exists())
-		throw std::runtime_error("File \"keys\" lost!");
-	keys.open(QIODevice::ReadOnly | QIODevice::Text);
-	keyList = keys.readAll().split('\n');
-	
 	//init variable
 	health = 3;
 	gameTime = 5000;
@@ -215,7 +216,7 @@ void endlessMode::wrongKeyWarning() {
 }
 
 void endlessMode::addTime(int delt) {
-	this->gameTime -= delt;
+	this->gameTime += delt;
 	if (this->gameTime <= 0) {
 		this->wrongKeyWarning();
 		if (this->currentState == gameState::RUNNING) {

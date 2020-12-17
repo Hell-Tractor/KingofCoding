@@ -13,11 +13,11 @@ class mainWidget : public QWidget {
     mainWidget(QWidget *parent = Q_NULLPTR);
     ~mainWidget();
     enum widget {
-      MENU, MODE_SELECT, STAGE_SELECT, ENDLESSMODE, STAGEMODE, ABOUT
+      MENU, MODE_SELECT, STAGE_SELECT, ENDLESSMODE, STAGEMODE, FALLINGMODE, ABOUT
     };
 
     enum class gameMode {
-      NONE, STAGE, ENDLESS
+      NONE, STAGE, ENDLESS, FALLING
     };
 
   signals:

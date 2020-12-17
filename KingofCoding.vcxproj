@@ -97,11 +97,16 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="endlessMode.cpp" />
+    <ClCompile Include="fallingMode.cpp" />
     <ClCompile Include="gamemodeBase.cpp" />
     <ClCompile Include="key.cpp" />
     <ClCompile Include="keyboard.cpp" />
+    <Text Include="letters">
+      <FileType>CppCode</FileType>
+    </Text>
     <ClCompile Include="stageMode.cpp" />
     <ClInclude Include="endlessMode.h" />
+    <QtMoc Include="fallingMode.h" />
     <ClInclude Include="stageMode.h" />
     <ClCompile Include="ui_mainWidget.cpp" />
     <QtMoc Include="gamemodeBase.h" />
