@@ -5,6 +5,7 @@
 #include <stdexcept>
 #include <QMessageBox>
 #include <QTime>
+#include <QSettings>
 
 int fallingMode::GEN_INTERVAL = 20 * 8;
 int fallingMode::KEY_SIZE = 65;
@@ -24,6 +25,11 @@ const int fallingMode::MAX_HEALTH = 10;
 const QString fallingMode::COLOR_SET[7] = {"OrangeRed", "Orange", "Gold", "LimeGreen", "DarkTurquoise", "DeepSkyBlue", "Purple"};
 
 fallingMode::fallingMode(QWidget* parent) : gamemodeBase(parent) {
+	//read settings
+	QSettings* settings = new QSettings("./settings.ini", QSettings::IniFormat);
+	SCORE_PER_LEVEL = settings->value("fallingMode/score_per_level").toInt();
+	delete settings;
+
 	//get letters list
 	QFile letters("./letters");
 	if (!letters.exists())
@@ -153,7 +159,7 @@ void fallingMode::handleKeyPress(int key) {
 		this->scoreLabel->setText(QString("<img src=\"./icons/score.png\">Score: ") + QString::number(score, 'f', 2));
 
 		//level up
-		if (score > level * 50) {
+		if (score > level * SCORE_PER_LEVEL) {
 			level++;
 			node::HEIGHT_PER_MOVE++;
 

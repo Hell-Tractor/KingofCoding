@@ -36,6 +36,7 @@ class fallingMode final : public gamemodeBase {
 		static int KEY_SIZE, GEN_INTERVAL;
 		int STAGE_WIDTH, STAGE_HEIGHT;
 		int JUDGING_LINE_HEIGHT, LEVEL_LABEL_HEIGHT;
+		int SCORE_PER_LEVEL;
 
 		QVBoxLayout* gameLayout;
 		QWidget* gameScreen;
