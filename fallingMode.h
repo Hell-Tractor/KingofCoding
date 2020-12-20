@@ -1,5 +1,6 @@
 #pragma once
 #include "gamemodeBase.h"
+#include <QTextEdit>
 
 class fallingMode final : public gamemodeBase {
 	Q_OBJECT
@@ -25,15 +26,15 @@ class fallingMode final : public gamemodeBase {
 				char c;
 				int color;
 				bool toRemove;
-				QLabel* label;
+				QTextEdit* label;
 		};
 
 		const static QString PERFECT, GREAT, GOOD, MISS;
 		const static double PERFECT_BONUS, GREAT_BONUS, GOOD_BONUS, MISS_BONUS;
-		const static int MAX_HEALTH;
 		const static QString COLOR_SET[7];
 		
-		static int KEY_SIZE, GEN_INTERVAL;
+		int INIT_HEALTH, INIT_SPEED, HEALTH_REC;
+		int KEY_SIZE;
 		int STAGE_WIDTH, STAGE_HEIGHT;
 		int JUDGING_LINE_HEIGHT, LEVEL_LABEL_HEIGHT;
 		int SCORE_PER_LEVEL;

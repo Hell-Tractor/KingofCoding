@@ -10,6 +10,7 @@
 
 - 点击StartGame按钮
 - 选择你想游玩的模式
+- 所有模式均加入了暂停功能，前两模式为按下任意键结束暂停且该键会被用作判断
 - stagemode（闯关模式）
     - 选择关卡后按下对应按键即可，按错会扣除生命值。
 - endlessmode（无尽模式）
@@ -37,9 +38,25 @@
 - 对于fallingmode
     - 修改letters文件即可，每行一个单词，只能包含拉丁字母
 
-## Notes
+## Configuration modification
 
-- 当前为公测版本(beta 2.0.0)，如发现bug请联系我
+- 打开游戏所在目录下的settings.ini
+- 参照修改指定项后的值即可
+- <font color=red>请保证修改后的值合法，如不合法将发生不可预期的错误</font>
+- <font color=red>请不要修改警告信息后的设置项，随意修改将导致不可预期的错误</font>
+- 重启游戏
+
+## Icon modification
+
+- 进入游戏所在目录下的icons文件夹
+- 以<font color=red>相同的尺寸</font>替换对应图片（需要保证文件名<font color=red>及后缀</font>均一致）
+- 重启游戏
+
+## Future
+
+- 添加设置界面
+- 添加高分榜
+- 添加存档/读档功能
 
 ## Maintainers
 

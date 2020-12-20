@@ -23,18 +23,15 @@
     <Filter Include="Source Files\gamemode">
       <UniqueIdentifier>{a4c6470b-0ec5-4cc7-8628-c1475f3832c7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="python Files">
+      <UniqueIdentifier>{40444369-acbc-4751-b6f5-9f9226964a06}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="mainWidget.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <ClCompile Include="mainWidget.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClInclude Include="stdafx.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClCompile Include="stdafx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <QtMoc Include="gamemodeBase.h">
@@ -86,6 +83,9 @@
     <ClInclude Include="endlessMode.h">
       <Filter>Header Files\gamemode</Filter>
     </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md">
@@ -99,6 +99,9 @@
     </None>
     <None Include="settings.ini">
       <Filter>Resource Files</Filter>
+    </None>
+    <None Include="getUpdate.py">
+      <Filter>python Files</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

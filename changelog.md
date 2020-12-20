@@ -1,3 +1,15 @@
+### beta 2.1.0
+
+- 为endlessmode添加背景图片
+- 删除debug代码
+- 为endlessmode和stagemode添加暂停功能
+- 版本号从配置文件读取
+- 多项游戏数据从配置文件读取
+- 修改完善README
+- 为fallingMode下文字添加了描边
+- 修改了logo
+- 添加了自动检查版本更新
+
 ### beta 2.0.1
 
 - 将升级要求通过配置文件读取

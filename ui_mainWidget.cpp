@@ -122,11 +122,19 @@ void Ui_mainWidgetClass::setupUi(QWidget* mainWidgetClass) {
 }
 
 void Ui_mainWidgetClass::retranslateUi(QWidget* mainWidgetClass) {
-  mainWidgetClass->setWindowTitle(QCoreApplication::translate("mainWidgetClass", "King of Coding-v2.0.1-Beta", nullptr));
+  /**********Read version info************/
+  QSettings* settings = new QSettings("./settings.ini", QSettings::IniFormat);
+  QString versiontag = settings->value("/version/tag").toString();
+  QString version = settings->value("/version/version").toString();
+  delete settings;
+  /***************************************/
+
+  mainWidgetClass->setWindowTitle(QCoreApplication::translate("mainWidgetClass", QString("King of Coding-v%1%2").arg(version, (versiontag == "release" ? "" : QString("-") + versiontag)).toStdString().c_str(), nullptr));
   //menu
   QFont titleft;
-  titleft.setPointSize(60);
+  titleft.setPointSize(70);
   titleft.setFamily("Curlz MT");
+  titleft.setBold(true);
   this->title->setFont(titleft);
   this->title->setText("<font color=pink>King</font>\t<font color=blue>of</font>\t<font color=indigo>Coding</font>");
   this->title->setAlignment(Qt::AlignCenter);
@@ -195,7 +203,8 @@ void Ui_mainWidgetClass::retranslateUi(QWidget* mainWidgetClass) {
   aboutInfoFt.setPointSize(20);
   aboutInfoFt.setFamily("Consolas");
   this->aboutInfo->setFont(aboutInfoFt);
-  this->aboutInfo->setText("<font>Version: 2.0.1-Beta<br>Author: Chen Yiming<br>Other: This program is only for personal use.</font><br><font color=red>Any actions of plagiarism is prohibitted.</font>");
+  QString ver = QString("Version: %1%2").arg(version, (versiontag == "release" ? "" : QString("-") + versiontag));
+  this->aboutInfo->setText(QString("<font>%1<br>Author: Chen Yiming<br>Other: This program is only for personal use.</font><br><font color=red>Any actions of plagiarism is prohibitted.</font>").arg(ver));
 
   this->stackedWidget->setCurrentIndex(0);
 }

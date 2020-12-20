@@ -2,13 +2,20 @@
 #include <stdexcept>
 #include <QMessageBox>
 #include <QTimer>
+#include <QSettings>
 
 stageMode::stageMode(QWidget* parent) : gamemodeBase(parent) {
+	/**************settings***************/
+	QSettings* settings = new QSettings("./settings.ini", QSettings::IniFormat);
+	INIT_HEALTH = settings->value("/stageMode/init_health").toInt();
+	LENGTH_PER_LABEL = settings->value("/stageMode/length_per_label").toInt();
+	delete settings;
+	/**************settings***************/
+
 	//init
 	i = 0;
-	health = 3;
+	health = INIT_HEALTH;
 	gametime = 0;
-	LENGTH_PER_LABEL = 20;
 	gameText = nullptr;
 
 	//widget
@@ -58,6 +65,12 @@ stageMode::~stageMode() {
 }
 
 void stageMode::handleKeyPress(int key) {
+	if (key == ' ') {
+		if (this->currentState == gameState::RUNNING)
+			this->currentState = gameState::WAITING;
+		return;
+	}
+
 	if (this->currentState == gameState::WAITING)
 		this->currentState = gameState::RUNNING;
 	if (this->currentState != gameState::RUNNING)
@@ -92,7 +105,7 @@ void stageMode::init() {
 
 	//init variable
 	i = 0;
-	health = 3;
+	health = INIT_HEALTH;
 	gametime = 0;
 
 	//init label

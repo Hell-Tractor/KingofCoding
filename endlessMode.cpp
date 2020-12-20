@@ -5,8 +5,17 @@
 #include <QTime>
 #include <QMessageBox>
 #include <QTimer>
+#include <QSettings>
 
 endlessMode::endlessMode(QWidget* parent) : gamemodeBase(parent) {
+	/**************settings***************/
+	QSettings* settings = new QSettings("./settings.ini", QSettings::IniFormat);
+	INIT_HEALTH = settings->value("/endlessMode/init_health").toInt();
+	INIT_TIME = settings->value("/endlessMode/init_time").toInt();
+	HEALTH_REC_PERCENTAGE = settings->value("/endlessMode/health_rec_percentage").toInt();
+	delete settings;
+	/**************settings***************/
+
 	//get keys list
 	QFile keys("./keys");
 	if (!keys.exists())
@@ -16,12 +25,15 @@ endlessMode::endlessMode(QWidget* parent) : gamemodeBase(parent) {
 
 	//init
 	i = 0;
-	health = 3;
+	health = INIT_HEALTH;
 	count = 0;
 	score = 0.0;
-	gameTime = 5000;
+	gameTime = INIT_TIME;
 	isRec = false;
 	
+	//background
+	bgLabel = new QLabel(this);
+
 	gameLayout = new QVBoxLayout;
 
 	//stage
@@ -52,16 +64,28 @@ endlessMode::endlessMode(QWidget* parent) : gamemodeBase(parent) {
 }
 
 void endlessMode::retranslateUi() {
+	/**************settings***************/
+	QSettings* settings = new QSettings("./settings.ini", QSettings::IniFormat);
+	int bgWidgetWidth = settings->value("/mainWidget/width").toInt();
+	int bgWidgetHeight = settings->value("/mainWidget/height").toInt();
+	delete settings;
+	/**************settings***************/
+
+	//background
+	bgLabel->setPixmap(QPixmap("./icons/endlessbg.png"));
+	bgLabel->setScaledContents(true);
+	bgLabel->resize(bgWidgetWidth, bgWidgetHeight);
+
 	QFont scoreboardFt;
 	scoreboardFt.setPointSize(15);
 	scoreboardFt.setFamily("Comic Sans MS");
 	this->healthLabel->setFont(scoreboardFt);
-	this->healthLabel->setText("<img src=\"./icons/health.png\">Health: ");
+	this->healthLabel->setText(QString("<img src=\"./icons/health.png\">Health: ") + QString::number(INIT_HEALTH));
 	this->timeLabel->setFont(scoreboardFt);
-	this->timeLabel->setText("<img src=\"./icons/time.png\">Time Used: 0.00");
+	this->timeLabel->setText(QString("<img src=\"./icons/time.png\">Time left: ") + QString::number(INIT_TIME / 1000.0, 'f', 2));
 	this->timeLabel->setMinimumWidth(270);
 	this->scoreLabel->setFont(scoreboardFt);
-	this->scoreLabel->setText("<img src=\"./icons/score.png\">Score: 0.00");
+	this->scoreLabel->setText("<img src=\"./icons/score.png\">Score: ");
 	QFont textZoneFt;
 	textZoneFt.setPointSize(30);
 	textZoneFt.setFamily("Consolas");
@@ -73,6 +97,11 @@ endlessMode::~endlessMode() {
 }
 
 void endlessMode::handleKeyPress(int key) {
+	if (key == ' ') {
+		if (this->currentState == gameState::RUNNING)
+			this->currentState = gameState::WAITING;
+		return;
+	}
 	//check gamestate
 	if (this->currentState == gameState::WAITING)
 		this->currentState = gameState::RUNNING;
@@ -99,7 +128,7 @@ void endlessMode::handleKeyPress(int key) {
 			this->scoreLabel->setText(QString("<img src=\"./icons/score.png\">Score: ") + QString::number(score, 'f', 2));
 
 			//reset timer
-			gameTime = 5000.0 - qLn(count + 1) * 1000;
+			gameTime = INIT_TIME - qLn(count + 1) * 1000;
 			if (gameTime < 2000)
 				gameTime = 2000;
 
@@ -109,7 +138,7 @@ void endlessMode::handleKeyPress(int key) {
 			this->textLabel->setText(currentText);
 
 			//generate health recovery
-			if (qrand() % 100 <= 10) {
+			if (qrand() % 100 <= HEALTH_REC_PERCENTAGE) {
 				this->isRec = true;
 				this->textLabel->setStyleSheet("background-image: url(./icons/HealthRecBg.png); background-repeat: repeat-xy;");
 			} else {
@@ -127,7 +156,7 @@ void endlessMode::handleKeyPress(int key) {
 		this->wrongKeyWarning();
 
 		//reset timer
-		gameTime = 5000.0 - qLn(count + 1) * 1000;
+		gameTime = INIT_TIME - qLn(count + 1) * 1000;
 		if (gameTime < 2000)
 			gameTime = 2000;
 
@@ -137,7 +166,7 @@ void endlessMode::handleKeyPress(int key) {
 		this->textLabel->setText(currentText);
 		
 		//generate health recovery
-		if (qrand() % 100 <= 10) {
+		if (qrand() % 100 <= HEALTH_REC_PERCENTAGE) {
 			this->isRec = true;
 			this->textLabel->setStyleSheet("background-image: url(./icons/HealthRecBg.png); background-repeat: repeat-xy;");
 		} else {
@@ -149,17 +178,17 @@ void endlessMode::handleKeyPress(int key) {
 
 void endlessMode::init() {
 	//init variable
-	health = 3;
-	gameTime = 5000;
+	health = INIT_HEALTH;
+	gameTime = INIT_TIME;
 	score = 0.0;
 	i = 0;
 	count = 0;
 	isRec = false;
 
 	//init label
-	this->timeLabel->setText("<img src=\"./icons/time.png\">Time left: 5.00");
+	this->timeLabel->setText(QString("<img src=\"./icons/time.png\">Time left: ") + QString::number(gameTime / 1000.0, 'f', 2));
 	this->scoreLabel->setText("<img src=\"./icons/score.png\">Score: 0.00");
-	this->healthLabel->setText("<img src=\"./icons/health.png\">Health: 3");
+	this->healthLabel->setText(QString("<img src=\"./icons/health.png\">Health: ") + QString::number(health));
 
 	//init random
 	qsrand(QTime(0, 0, 0).secsTo(QTime::currentTime()));
@@ -220,7 +249,7 @@ void endlessMode::addTime(int delt) {
 	if (this->gameTime <= 0) {
 		this->wrongKeyWarning();
 		if (this->currentState == gameState::RUNNING) {
-			this->gameTime = 5000.0 - qLn(count + 1) * 1000;
+			this->gameTime = INIT_TIME - qLn(count + 1) * 1000;
 			if (this->gameTime < 2000)
 				this->gameTime = 2000;
 		}

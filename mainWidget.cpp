@@ -71,8 +71,6 @@ mainWidget::~mainWidget() {
 }
 
 void mainWidget::keyPressEvent(QKeyEvent* e) {
-  if (e->key() == '1')
-    ui.stackedWidget->setCurrentIndex(widget::FALLINGMODE);
   switch (gamemode) {
     case gameMode::STAGE:
       ui.stageModeWidget->handleKeyPress(e->key());

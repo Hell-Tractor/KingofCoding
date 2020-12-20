@@ -6,10 +6,9 @@
 #include <QMessageBox>
 #include <QTime>
 #include <QSettings>
+#include <QTextCharFormat>
 
-int fallingMode::GEN_INTERVAL = 20 * 8;
-int fallingMode::KEY_SIZE = 65;
-int fallingMode::node::HEIGHT_PER_MOVE = 4;
+int fallingMode::node::HEIGHT_PER_MOVE = 0;
 
 const QString fallingMode::PERFECT = "<font color=Gold>PERFECT</font>";
 const QString fallingMode::GREAT = "<font color=LimeGreen>GREAT</font>";
@@ -21,15 +20,19 @@ const double fallingMode::GREAT_BONUS = 1.5;
 const double fallingMode::GOOD_BONUS = 1.0;
 const double fallingMode::MISS_BONUS = 0.0;
 
-const int fallingMode::MAX_HEALTH = 10;
 const QString fallingMode::COLOR_SET[7] = {"OrangeRed", "Orange", "Gold", "LimeGreen", "DarkTurquoise", "DeepSkyBlue", "Purple"};
 
 fallingMode::fallingMode(QWidget* parent) : gamemodeBase(parent) {
 	//read settings
 	QSettings* settings = new QSettings("./settings.ini", QSettings::IniFormat);
-	SCORE_PER_LEVEL = settings->value("fallingMode/score_per_level").toInt();
+	SCORE_PER_LEVEL = settings->value("/fallingMode/score_per_level").toInt();
+	INIT_HEALTH = settings->value("/fallingMode/init_health").toInt();
+	KEY_SIZE = settings->value("/fallingMode/key_size").toInt();
+	INIT_SPEED = settings->value("/fallingMode/init_speed").toInt();
+	HEALTH_REC = settings->value("/fallingMode/health_rec").toInt();
 	delete settings;
 
+	node::HEIGHT_PER_MOVE = INIT_SPEED;
 	//get letters list
 	QFile letters("./letters");
 	if (!letters.exists())
@@ -47,7 +50,7 @@ fallingMode::fallingMode(QWidget* parent) : gamemodeBase(parent) {
 	LETTERFT.setBold(true);
 	currentX = 0;
 	currentColor = 0;
-	health = MAX_HEALTH;
+	health = INIT_HEALTH;
 	score = 0.0;
 	hasHightLight = false;
 	level = 1;
@@ -102,7 +105,7 @@ void fallingMode::retranslateUi() {
 	scoreboardFt.setFamily("Comic Sans MS");
 	scoreboardFt.setPointSize(15);
 	this->healthLabel->setFont(scoreboardFt);
-	this->healthLabel->setText("<img src=\"./icons/health.png\">Health: " + QString::number(MAX_HEALTH));
+	this->healthLabel->setText("<img src=\"./icons/health.png\">Health: " + QString::number(INIT_HEALTH));
 	QFont statusFt;
 	statusFt.setFamily("Lucida Handwriting");
 	statusFt.setPointSize(15);
@@ -167,7 +170,7 @@ void fallingMode::handleKeyPress(int key) {
 				QTimer::singleShot(200 * i, Qt::TimerType::CoarseTimer, [=]() {
 					this->levelLabel->setText("");
 					QTimer::singleShot(100, Qt::TimerType::CoarseTimer, [=]() {
-						this->levelLabel->setText("LEVEL UP!\nHEALTH +5");
+						this->levelLabel->setText(QString("LEVEL UP!\nHEALTH +") + QString::number(HEALTH_REC));
 														 });
 													 });
 			
@@ -175,7 +178,7 @@ void fallingMode::handleKeyPress(int key) {
 				this->levelLabel->setText(QString("LEVEL ") + QString::number(level));
 												 });
 
-			health += 5;
+			health += HEALTH_REC;
 			this->healthLabel->setText("<img src=\"./icons/health.png\">Health: " + QString::number(health));
 		}
 
@@ -201,9 +204,9 @@ void fallingMode::init() {
 	score = 0.0;
 	currentX = 0;
 	currentColor = 0;
-	health = MAX_HEALTH;
+	health = INIT_HEALTH;
 	level = 1;
-	node::HEIGHT_PER_MOVE = 4;
+	node::HEIGHT_PER_MOVE = INIT_SPEED;
 
 	//init random
 	qsrand(QTime(0, 0, 0).secsTo(QTime::currentTime()));
@@ -211,7 +214,7 @@ void fallingMode::init() {
 	//init label
 	this->scoreLabel->setText("<img src=\"./icons/score.png\">Score: 0.00");
 	this->statusLabel->setText("");
-	this->healthLabel->setText("<img src=\"./icons/health.png\">Health: " + QString::number(MAX_HEALTH));
+	this->healthLabel->setText("<img src=\"./icons/health.png\">Health: " + QString::number(INIT_HEALTH));
 	this->levelLabel->setText("LEVEL 1");
 
 	//reset keyboard
@@ -285,13 +288,19 @@ void fallingMode::generateLetter() {
 		temp.y = 0 - KEY_SIZE * (cnt++) * 1.2;
 		temp.color = 0x000000;
 		temp.toRemove = false;
-		temp.label = new QLabel(this->gameScreen);
+		temp.label = new QTextEdit(this->gameScreen);
+		QTextCharFormat format;
+		format.setTextOutline(QPen(Qt::black, 1, Qt::SolidLine, Qt::FlatCap, Qt::BevelJoin));
+		temp.label->mergeCurrentCharFormat(format);
+		temp.label->setDisabled(true);
+		temp.label->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+		temp.label->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+		temp.label->setStyleSheet(QString("border: none; background-color: transparent; color: ") + COLOR_SET[(currentColor = (currentColor + 1) % 7)]);
 		temp.label->setText(QString(temp.c));
 		temp.label->setFont(LETTERFT);
 		temp.label->setGeometry(temp.x, temp.y, KEY_SIZE, KEY_SIZE);
 		temp.label->setAlignment(Qt::AlignCenter);
 		temp.label->setSizePolicy(QSizePolicy::Policy::Fixed, QSizePolicy::Policy::Fixed);
-		temp.label->setStyleSheet(QString("background-color: transparent; color: ") + COLOR_SET[(currentColor = (currentColor + 1) % 7)]);
 		temp.label->show();
 		letters.push_back(temp);
 	}

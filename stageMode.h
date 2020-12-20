@@ -22,7 +22,7 @@ class stageMode final : public gamemodeBase {
 		int i, health, gametime/*ms*/;
 		QFile* gameText;
 		QString currentStage;
-		int LENGTH_PER_LABEL;
+		int LENGTH_PER_LABEL, INIT_HEALTH;
 
 		QLabel* textZone[3];
 		QLabel* healthLabel, * timeLabel;

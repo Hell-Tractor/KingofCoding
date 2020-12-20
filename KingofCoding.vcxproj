@@ -102,7 +102,7 @@
     <ClCompile Include="key.cpp" />
     <ClCompile Include="keyboard.cpp" />
     <Text Include="letters">
-      <FileType>CppCode</FileType>
+      <FileType>Text</FileType>
     </Text>
     <ClCompile Include="stageMode.cpp" />
     <ClInclude Include="endlessMode.h" />
@@ -112,18 +112,15 @@
     <QtMoc Include="gamemodeBase.h" />
     <ClInclude Include="key.h" />
     <ClInclude Include="keyboard.h" />
+    <ClInclude Include="stdafx.h" />
     <ClInclude Include="ui_mainWidget.h" />
     <QtMoc Include="mainWidget.h" />
     <ClCompile Include="mainWidget.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClInclude Include="stdafx.h" />
-    <ClCompile Include="stdafx.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">Create</PrecompiledHeader>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="changelog.md" />
+    <None Include="getUpdate.py" />
     <None Include="keys" />
     <None Include="README.md" />
     <None Include="settings.ini" />
