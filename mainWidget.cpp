@@ -2,6 +2,7 @@
 #include "stdafx.h"
 #include <qmessagebox.h>
 #include <qglobal.h>
+#include <cstdlib>
 
 mainWidget::mainWidget(QWidget *parent)
     : QWidget(parent) {
@@ -65,6 +66,9 @@ mainWidget::mainWidget(QWidget *parent)
   /******************connect********************/
 
   timer->start(time_interval);
+
+  /*****************check update******************/
+  system("./getUpdate.exe");
 }
 
 mainWidget::~mainWidget() {
