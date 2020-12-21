@@ -104,9 +104,11 @@
     <Text Include="letters">
       <FileType>Text</FileType>
     </Text>
+    <ClCompile Include="settingsWidget.cpp" />
     <ClCompile Include="stageMode.cpp" />
     <ClInclude Include="endlessMode.h" />
     <QtMoc Include="fallingMode.h" />
+    <QtMoc Include="settingsWidget.h" />
     <ClInclude Include="stageMode.h" />
     <ClCompile Include="ui_mainWidget.cpp" />
     <QtMoc Include="gamemodeBase.h" />

@@ -5,26 +5,28 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
-    </Filter>
     <Filter Include="Resource Files">
       <UniqueIdentifier>{D9D6E242-F8AF-46E4-B9FD-80ECBC20BA3E}</UniqueIdentifier>
-      <Extensions>qrc;*</Extensions>
+      <Extensions>ini;*</Extensions>
       <ParseFiles>false</ParseFiles>
     </Filter>
     <Filter Include="Description Files">
       <UniqueIdentifier>{4d4f729f-a411-4202-aca7-256fb6980162}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\gamemode">
-      <UniqueIdentifier>{460a4586-a6c8-49c6-8177-5f81d695bf1b}</UniqueIdentifier>
+      <Extensions>md</Extensions>
     </Filter>
     <Filter Include="Source Files\gamemode">
       <UniqueIdentifier>{a4c6470b-0ec5-4cc7-8628-c1475f3832c7}</UniqueIdentifier>
     </Filter>
     <Filter Include="python Files">
       <UniqueIdentifier>{40444369-acbc-4751-b6f5-9f9226964a06}</UniqueIdentifier>
+      <Extensions>py</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Header Files\gamemode">
+      <UniqueIdentifier>{460a4586-a6c8-49c6-8177-5f81d695bf1b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -39,6 +41,9 @@
     </QtMoc>
     <QtMoc Include="fallingMode.h">
       <Filter>Header Files\gamemode</Filter>
+    </QtMoc>
+    <QtMoc Include="settingsWidget.h">
+      <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
   <ItemGroup>
@@ -65,6 +70,9 @@
     </ClCompile>
     <ClCompile Include="fallingMode.cpp">
       <Filter>Source Files\gamemode</Filter>
+    </ClCompile>
+    <ClCompile Include="settingsWidget.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

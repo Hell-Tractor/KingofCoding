@@ -1,5 +1,4 @@
 #include "fallingMode.h"
-#include <qDebug>
 #include <QTimer>
 #include <QFile>
 #include <stdexcept>
@@ -58,10 +57,14 @@ fallingMode::fallingMode(QWidget* parent) : gamemodeBase(parent) {
 	gameLayout = new QVBoxLayout;
 	
 	//screen
+	QHBoxLayout* screenLayout = new QHBoxLayout;
+	screenLayout->addStretch();
 	gameScreen = new QWidget;
 	judgingLineLabel = new QLabel(gameScreen);
 	levelLabel = new QLabel(gameScreen);
-	gameLayout->addWidget(gameScreen);
+	screenLayout->addWidget(gameScreen);
+	screenLayout->addStretch();
+	gameLayout->addLayout(screenLayout);
 
 	//scoreboard
 	scoreboardLayout = new QHBoxLayout;

@@ -13,3 +13,9 @@ gamemodeBase::~gamemodeBase() {
 gamemodeBase::gameState gamemodeBase::GameState() const{
 	return currentState;
 }
+
+void gamemodeBase::pauseGame() {
+	if (currentState == gameState::RUNNING)
+		currentState = gameState::WAITING;
+	return;
+}

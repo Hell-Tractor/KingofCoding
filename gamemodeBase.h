@@ -18,6 +18,7 @@ class gamemodeBase : public QWidget {
 		virtual void init() = 0;
 		virtual void cleanUp(gameState state) = 0;
 		virtual gameState GameState() const;
+		virtual void pauseGame();
 	
 	signals:
 		void exitGameInterface();

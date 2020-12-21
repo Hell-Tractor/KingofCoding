@@ -1,3 +1,9 @@
+### beta 2.2.0
+
+- 修复无法正常调用getUpdate的bug
+- 添加设置界面
+- 删除主界面layout，修复小bug
+
 ### beta 2.1.0
 
 - 为endlessmode添加背景图片

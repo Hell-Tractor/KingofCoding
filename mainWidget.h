@@ -30,8 +30,10 @@ class mainWidget : public QWidget {
 
   private:
     void keyPressEvent(QKeyEvent* e);
+    void pauseGame();
 
     int time_interval;
+    bool settingsIsOpen;
 
     Ui::mainWidgetClass ui;
     QTimer* timer;

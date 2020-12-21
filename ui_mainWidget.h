@@ -14,6 +14,7 @@
 #include "stageMode.h"
 #include "endlessMode.h"
 #include "fallingMode.h"
+#include "settingsWidget.h"
 
 QT_BEGIN_NAMESPACE
 
@@ -42,6 +43,9 @@ class Ui_mainWidgetClass
     //about
     QPushButton* aboutToMenu;
     QLabel* aboutInfo, * aboutTitle;
+
+    //settings
+    settingsWidget* settingWidget;
 
     void setupUi(QWidget* mainWidgetClass);
     void retranslateUi(QWidget* mainWidgetClass);

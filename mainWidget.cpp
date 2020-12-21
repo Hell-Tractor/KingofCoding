@@ -2,7 +2,6 @@
 #include "stdafx.h"
 #include <qmessagebox.h>
 #include <qglobal.h>
-#include <cstdlib>
 
 mainWidget::mainWidget(QWidget *parent)
     : QWidget(parent) {
@@ -17,6 +16,7 @@ mainWidget::mainWidget(QWidget *parent)
   gamemode = gameMode::NONE;
   timer = new QTimer();
   timer->setTimerType(Qt::TimerType::PreciseTimer);
+  settingsIsOpen = false;
   /********************init********************/
 
   /******************connect********************/
@@ -59,6 +59,29 @@ mainWidget::mainWidget(QWidget *parent)
   connect(ui.fallingModeWidget, &fallingMode::exitGameInterface, this, [=]() {
     ui.stackedWidget->setCurrentIndex(widget::MODE_SELECT);
           });
+  connect(ui.settingWidget->exitbtn, &QPushButton::clicked, this, [=]() {
+    if (QMessageBox::warning(ui.settingWidget, "Warning", "You will lost the process if exit!\n", QMessageBox::Cancel, QMessageBox::Yes) == QMessageBox::Cancel)
+      return;
+    settingsIsOpen = false;
+    ui.settingWidget->hide();
+    switch (gamemode) {
+      case gameMode::STAGE:
+        ui.stageModeWidget->cleanUp(gamemodeBase::gameState::LOSE);
+        break;
+      case gameMode::ENDLESS:
+        ui.endlessModeWidget->cleanUp(gamemodeBase::gameState::LOSE);
+        break;
+      case gameMode::FALLING:
+        ui.fallingModeWidget->cleanUp(gamemodeBase::gameState::LOSE);
+        break;
+      default:
+        break;
+    }
+          });
+  connect(ui.settingWidget->continuebtn, &QPushButton::clicked, this, [=]() {
+    settingsIsOpen = false;
+    ui.settingWidget->hide();
+          });
 
   connect(ui.stage_list_widget, &QListWidget::itemDoubleClicked, this, &mainWidget::setCurrentStage);
   connect(this, &mainWidget::GameStart, this, &mainWidget::initGame);
@@ -68,13 +91,28 @@ mainWidget::mainWidget(QWidget *parent)
   timer->start(time_interval);
 
   /*****************check update******************/
-  system("./getUpdate.exe");
+  QProcess::startDetached(tr("./getUpdate.exe"), QStringList());
 }
 
 mainWidget::~mainWidget() {
 }
 
 void mainWidget::keyPressEvent(QKeyEvent* e) {
+  if (e->key() == Qt::Key_Escape) {
+    if (gamemode == gameMode::NONE)
+      return;
+    if (!settingsIsOpen) {
+      this->pauseGame();
+      settingsIsOpen = true;
+      ui.settingWidget->showInterface();
+    } else {
+      settingsIsOpen = false;
+      ui.settingWidget->hide();
+    }
+    return;
+  }
+  if (settingsIsOpen)
+    return;
   switch (gamemode) {
     case gameMode::STAGE:
       ui.stageModeWidget->handleKeyPress(e->key());
@@ -126,6 +164,27 @@ void mainWidget::Loop() {
   if (ui.fallingModeWidget->GameState() == gamemodeBase::gameState::RUNNING && gamemode == gameMode::FALLING) {
     ui.fallingModeWidget->moveDown();
   }
+  if (ui.stageModeWidget->GameState() == gamemodeBase::gameState::UN_STARTED &&
+      ui.endlessModeWidget->GameState() == gamemodeBase::gameState::UN_STARTED &&
+      ui.fallingModeWidget->GameState() == gamemodeBase::gameState::UN_STARTED &&
+      this->gamemode != gameMode::NONE)
+    this->gamemode = gameMode::NONE;
   
   ui.stackedWidget->update();
+}
+
+void mainWidget::pauseGame() {
+  switch (gamemode) {
+    case gameMode::STAGE:
+      ui.stageModeWidget->pauseGame();
+      break;
+    case gameMode::ENDLESS:
+      ui.endlessModeWidget->pauseGame();
+      break;
+    case gameMode::FALLING:
+      ui.fallingModeWidget->pauseGame();
+      break;
+    default:
+      break;
+  }
 }

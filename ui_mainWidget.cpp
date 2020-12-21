@@ -15,10 +15,8 @@ void Ui_mainWidgetClass::setupUi(QWidget* mainWidgetClass) {
   /**************settings***************/
   mainWidgetClass->resize(width, height);
   /**********************************/
-  QHBoxLayout* stackedWidgetLayout = new QHBoxLayout;
-  stackedWidget = new QStackedWidget;
-  stackedWidgetLayout->addWidget(stackedWidget);
-  mainWidgetClass->setLayout(stackedWidgetLayout);
+  stackedWidget = new QStackedWidget(mainWidgetClass);
+  stackedWidget->resize(width, height);
 
   //menu
   QWidget* menu = new QWidget;
@@ -115,6 +113,11 @@ void Ui_mainWidgetClass::setupUi(QWidget* mainWidgetClass) {
   about_layout->addLayout(about_btn_layout);
   about->setLayout(about_layout);
   stackedWidget->addWidget(about);
+
+  //settings widget
+  settingWidget = new settingsWidget(mainWidgetClass);
+
+
   /**********************************/
   retranslateUi(mainWidgetClass);
 
@@ -205,6 +208,8 @@ void Ui_mainWidgetClass::retranslateUi(QWidget* mainWidgetClass) {
   this->aboutInfo->setFont(aboutInfoFt);
   QString ver = QString("Version: %1%2").arg(version, (versiontag == "release" ? "" : QString("-") + versiontag));
   this->aboutInfo->setText(QString("<font>%1<br>Author: Chen Yiming<br>Other: This program is only for personal use.</font><br><font color=red>Any actions of plagiarism is prohibitted.</font>").arg(ver));
+
+  this->settingWidget->retranslateUi(mainWidgetClass);
 
   this->stackedWidget->setCurrentIndex(0);
 }
