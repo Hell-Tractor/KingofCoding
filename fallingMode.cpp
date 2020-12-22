@@ -233,6 +233,7 @@ void fallingMode::init() {
 	this->statusLabel->setText("");
 	this->healthLabel->setText("<img src=\"./icons/health.png\">Health: " + QString::number(INIT_HEALTH));
 	this->levelLabel->setText("LEVEL 1");
+	this->screenShield->hide();
 
 	//reset keyboard
 	for (auto&& i : keyBoard->keys)
@@ -249,6 +250,8 @@ void fallingMode::cleanUp(gameState state) {
 	this->statusLabel->setText("");
 	for (auto&& i : this->keyBoard->keys)
 		i->reset_color();
+
+	this->screenShield->hide();
 
 	emit exitGameInterface();
 
@@ -338,7 +341,8 @@ void fallingMode::handleMiss() {
 void fallingMode::pauseGame() {
 	if (this->currentState == gameState::RUNNING) {
 		this->currentState = gameState::WAITING;
-
+		if (this->screenShield->isVisible())
+			return;
 		this->pauseLabel->setText("PAUSE");
 		this->screenShield->show();
 		this->screenShield->raise();
@@ -348,6 +352,10 @@ void fallingMode::pauseGame() {
 
 void fallingMode::resumeGame() {
 	if (this->screenShield->isVisible()) {
+		static bool isanimating = false;
+		if (isanimating)
+			return;
+		isanimating = true;
 		QPropertyAnimation* hideAnimation = new QPropertyAnimation(hideOpacity, "opacity");
 		hideAnimation->setDuration(2000);
 		hideAnimation->setStartValue(1);
@@ -361,6 +369,7 @@ void fallingMode::resumeGame() {
 		QTimer::singleShot(3000, Qt::TimerType::PreciseTimer, [&]() {
 			this->screenShield->hide();
 			this->currentState = gameState::RUNNING;
+			isanimating = false;
 											 });
 	} else
 		this->currentState = gameState::RUNNING;
