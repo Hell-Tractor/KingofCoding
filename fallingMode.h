@@ -1,6 +1,8 @@
 #pragma once
 #include "gamemodeBase.h"
 #include <QTextEdit>
+#include <QGraphicsOpacityEffect>
+
 
 class fallingMode final : public gamemodeBase {
 	Q_OBJECT
@@ -15,7 +17,9 @@ class fallingMode final : public gamemodeBase {
 		void cleanUp(gameState state);
 		void moveDown();
 		void handleMiss();
-		
+		void pauseGame();
+		void resumeGame();
+
 	private:
 		void generateLetter();
 	
@@ -40,11 +44,12 @@ class fallingMode final : public gamemodeBase {
 		int SCORE_PER_LEVEL;
 
 		QVBoxLayout* gameLayout;
-		QWidget* gameScreen;
+		QWidget* gameScreen, * screenShield;
 		QHBoxLayout* scoreboardLayout;
 		QLabel* healthLabel, * scoreLabel, * statusLabel;
 		QLabel* judgingLineLabel;
-		QLabel* levelLabel;
+		QLabel* levelLabel, * pauseLabel;
+		QGraphicsOpacityEffect* hideOpacity;
 
 		QByteArrayList allLetters;
 		QVector<node> letters;

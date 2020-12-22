@@ -1,3 +1,8 @@
+### release 1.0.0
+
+- fallingMode下暂停后将屏蔽屏幕以防止作弊
+- 更新getUpdate.py中的下载链接
+
 ### beta 2.2.0
 
 - 修复无法正常调用getUpdate的bug

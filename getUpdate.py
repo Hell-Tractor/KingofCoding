@@ -52,5 +52,8 @@ if cur_tag < tag or (cur_tag == tag and isOldVersion(cur_version, version)):
   res = tkinter.messagebox.askokcancel(title="New version release", message="A new version has been released\nclick ok to download")
   top.destroy()
   if res:
-    ver = 'v%d.%d.%d-%s' % (version[0], version[1], version[2], tag.lower())
+    if tag == 'release':
+      ver = 'v%d.%d.%d' % (version[0], version[1], version[2])
+    else:
+      ver = 'v%d.%d.%d-%s' % (version[0], version[1], version[2], tag.lower())
     webbrowser.open('https://github.com/Hell-Tractor/KingofCoding/releases/download/%s/KingofCoding-%s-x64.zip' % (ver, ver), new=2)

@@ -6,6 +6,7 @@
 #include <QTime>
 #include <QSettings>
 #include <QTextCharFormat>
+#include <QPropertyAnimation>
 
 int fallingMode::node::HEIGHT_PER_MOVE = 0;
 
@@ -60,6 +61,9 @@ fallingMode::fallingMode(QWidget* parent) : gamemodeBase(parent) {
 	QHBoxLayout* screenLayout = new QHBoxLayout;
 	screenLayout->addStretch();
 	gameScreen = new QWidget;
+	screenShield = new QWidget(gameScreen);
+	hideOpacity = new QGraphicsOpacityEffect(this->screenShield);
+	pauseLabel = new QLabel(screenShield);
 	judgingLineLabel = new QLabel(gameScreen);
 	levelLabel = new QLabel(gameScreen);
 	screenLayout->addWidget(gameScreen);
@@ -89,6 +93,13 @@ void fallingMode::retranslateUi() {
 	gameScreen->setFixedSize(STAGE_WIDTH, STAGE_HEIGHT);
 	gameScreen->setStyleSheet("background-color: lightgrey");
 	
+	//shield screen
+	screenShield->resize(gameScreen->size());
+	screenShield->setStyleSheet("background-color: black");
+	screenShield->raise();
+	screenShield->hide();
+	this->screenShield->setGraphicsEffect(hideOpacity);
+	
 	//level Label
 	QFont levelFt;
 	levelFt.setPointSize(50);
@@ -98,6 +109,13 @@ void fallingMode::retranslateUi() {
 	levelLabel->setStyleSheet("color: white");
 	levelLabel->setAlignment(Qt::AlignCenter);
 	levelLabel->setGeometry(0, LEVEL_LABEL_HEIGHT, STAGE_WIDTH, 200);
+
+	//pause label
+	pauseLabel->setFont(levelFt);
+	pauseLabel->setText("PAUSE");
+	pauseLabel->setStyleSheet("color: white");
+	pauseLabel->setAlignment(Qt::AlignCenter);
+	pauseLabel->setGeometry(0, LEVEL_LABEL_HEIGHT, STAGE_WIDTH, 200);
 
 	//juding Line
 	judgingLineLabel->setGeometry(0, JUDGING_LINE_HEIGHT, STAGE_WIDTH, 5);
@@ -126,14 +144,10 @@ fallingMode::~fallingMode() {
 
 void fallingMode::handleKeyPress(int key) {
 	if (key == ' ') {
-		if (this->currentState == gameState::RUNNING) {
-			this->levelLabel->setText("PAUSE");
-			this->currentState = gameState::WAITING;
-		}
-		else if (this->currentState == gameState::WAITING) {
-			this->levelLabel->setText(QString("LEVEL ") + QString::number(level));
-			this->currentState = gameState::RUNNING;
-		}
+		if (this->currentState == gameState::RUNNING)
+			this->pauseGame();
+		else if (this->currentState == gameState::WAITING)
+			this->resumeGame();
 		return;
 	}
 
@@ -319,4 +333,35 @@ void fallingMode::handleMiss() {
 		this->cleanUp(gameState::LOSE);
 		return;
 	}
+}
+
+void fallingMode::pauseGame() {
+	if (this->currentState == gameState::RUNNING) {
+		this->currentState = gameState::WAITING;
+
+		this->pauseLabel->setText("PAUSE");
+		this->screenShield->show();
+		this->screenShield->raise();
+		this->hideOpacity->setOpacity(1);
+	}
+}
+
+void fallingMode::resumeGame() {
+	if (this->screenShield->isVisible()) {
+		QPropertyAnimation* hideAnimation = new QPropertyAnimation(hideOpacity, "opacity");
+		hideAnimation->setDuration(2000);
+		hideAnimation->setStartValue(1);
+		hideAnimation->setEndValue(0.6);
+		hideAnimation->setEasingCurve(QEasingCurve::Linear);
+		hideAnimation->start();
+		for (int i = 0; i < 3; ++i)
+			QTimer::singleShot(1000 * i, Qt::TimerType::PreciseTimer, [=]() {
+				this->pauseLabel->setText(QString::number(3 - i));
+												 });
+		QTimer::singleShot(3000, Qt::TimerType::PreciseTimer, [&]() {
+			this->screenShield->hide();
+			this->currentState = gameState::RUNNING;
+											 });
+	} else
+		this->currentState = gameState::RUNNING;
 }
